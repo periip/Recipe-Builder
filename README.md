@@ -1,10 +1,10 @@
-# Meow Meow
+# Meow Meow #
 
-# Project Description
+# Project Description #
 
-## What is the domain of the application? Describe it.
+## What is the domain of the application?
 
-	This application is for a restaurant test kitchen. It helps with menu development for restaurants. The domain is contained within the entirety of the kitchen plus the suppliers. The application also contains the recipes for each menu item which are provided by the chefs.
+This application is for a restaurant test kitchen. It helps with menu development for restaurants. The domain is contained within the entirety of the kitchen plus the suppliers. The application also contains the recipes for each menu item which are provided by the chefs. We have chefs who develop recipes which take Ingredients, and those Ingredients will all be supplied by suppliers. Each recipe requires equipment to be made into menu items. The recipes are used by the chefs and they make menu items, and those menu items are either foods or drinks. Each menu item can also be a part of a combo, or have add-ons such as fries or drinks.
 
 ## What aspects of the domain are modeled by the database?
 

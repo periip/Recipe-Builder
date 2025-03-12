@@ -78,11 +78,6 @@ async function testOracleConnection() {
 
 async function fetchDemotableFromDb() {
     return await withOracleDB(async (connection) => {
-        await connection.execute(`
-            INSERT
-            INTO Ingredient
-            VALUES ('Garlic', 1.00)
-        `);
         const result = await connection.execute('SELECT * FROM Ingredient');
         console.log(result.metaData);
         console.log(result.rows);

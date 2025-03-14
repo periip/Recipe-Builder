@@ -38,10 +38,10 @@ async function checkDbConnection() {
 
 // Fetches data from the demotable and displays it.
 async function fetchAndDisplayUsers() {
-    const tableElement = document.getElementById('demotable');
+    const tableElement = document.getElementById('Cheftable');
     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/demotable', {
+    const response = await fetch('/cheftable', {
         method: 'GET'
     });
 
@@ -63,15 +63,15 @@ async function fetchAndDisplayUsers() {
 }
 
 // This function resets or initializes the demotable.
-async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
+async function resetCheftable() {
+    const response = await fetch("/initiate-cheftable", {
         method: 'POST'
     });
     const responseData = await response.json();
 
     if (responseData.success) {
         const messageElement = document.getElementById('resetResultMsg');
-        messageElement.textContent = "demotable initiated successfully!";
+        messageElement.textContent = "Cheftable initiated successfully!";
         fetchTableData();
     } else {
         alert("Error initiating table!");
@@ -79,20 +79,24 @@ async function resetDemotable() {
 }
 
 // Inserts new records into the demotable.
-async function insertDemotable(event) {
+async function insertCheftable(event) {
     event.preventDefault();
 
-    const idValue = document.getElementById('insertId').value;
-    const nameValue = document.getElementById('insertName').value;
+    const nameValue = document.getElementById('insertChefName').value;
+    const YOEValue = document.getElementById('insertYOE').value;
+    const seniorityValue = document.getElementById('insertSeniority').value;
+    const licenseValue = document.getElementById('insertLicense').value;
 
-    const response = await fetch('/insert-demotable', {
+    const response = await fetch('/insert-cheftable', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            id: idValue,
-            name: nameValue
+            chef_name: nameValue,
+            years_of_experience: YOEValue,
+            seniority: seniorityValue,
+            cooking_license: licenseValue
         })
     });
 
@@ -161,8 +165,8 @@ async function countDemotable() {
 window.onload = function () {
     checkDbConnection();
     fetchTableData();
-    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
-    document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
+    document.getElementById("resetCheftable").addEventListener("click", resetCheftable);
+    document.getElementById("insertCheftable").addEventListener("submit", insertCheftable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
 };

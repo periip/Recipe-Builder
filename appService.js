@@ -88,8 +88,8 @@ async function fetchDemotableFromDb() {
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
+            await connection.execute(`DROP TABLE Ingredient`);
+        } catch (err) {
             console.log('Table might not exist, proceeding to create...');
         }
 
@@ -145,8 +145,8 @@ async function countDemotable() {
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
-    initiateDemotable, 
-    insertDemotable, 
-    updateNameDemotable, 
+    initiateDemotable,
+    insertDemotable,
+    updateNameDemotable,
     countDemotable
 };

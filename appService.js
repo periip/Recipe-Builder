@@ -148,8 +148,8 @@ async function countDemotable() {
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
-    initiateDemotable, 
-    insertDemotable, 
-    updateNameDemotable, 
+    initiateDemotable,
+    insertDemotable,
+    updateNameDemotable,
     countDemotable
 };

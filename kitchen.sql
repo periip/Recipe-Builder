@@ -1,19 +1,16 @@
 drop table PartOf;
 drop table Combo;
-drop table AddonCanHave;
-drop table AddOnPrice;
+drop table AddOn;
 drop table Beverages;
 drop table Food;
 drop table Makes;
 drop table Uses;
 drop table Equipment;
 drop table Recommends;
-drop table MenuItemDetails;
-drop table MenuItemPrice;
+drop table MenuItem;
 drop table Has;
 drop table RecipeOwns;
-drop table ChefExperience;
-drop table ChefStatus;
+drop table Chef;
 drop table Supplies;
 drop table Supplier;
 drop table Ingredient;
@@ -43,28 +40,21 @@ CREATE TABLE Supplies (
 );
 grant select on Supplies to public;
 
-CREATE TABLE ChefStatus (
-	seniority VARCHAR(255),
-	years_of_experience INTEGER,
-	PRIMARY KEY(years_of_experience)
-);
-grant select on ChefStatus to public;
-
-CREATE TABLE ChefExperience (
+CREATE TABLE Chef (
 	chef_name VARCHAR(255),
 	years_of_experience INTEGER,
+	seniority VARCHAR(255),
 	cooking_license VARCHAR(255) NOT NULL,
-	PRIMARY KEY(chef_name),
-	FOREIGN KEY(years_of_experience) REFERENCES ChefStatus
+	PRIMARY KEY(chef_name)
 );
-grant select on ChefExperience to public;
+grant select on Chef to public;
 
 CREATE TABLE RecipeOwns (
 	recipe_ID INTEGER,
 	chef_name VARCHAR(255) NOT NULL,
 	recipe_name VARCHAR(255) NOT NULL,
 	PRIMARY KEY(recipe_ID),
-	FOREIGN KEY(chef_name) REFERENCES ChefExperience
+	FOREIGN KEY(chef_name) REFERENCES Chef
 		ON DELETE SET NULL
 );
 grant select on RecipeOwns to public;
@@ -81,31 +71,24 @@ CREATE TABLE Has (
 );
 grant select on Has to public;
 
-CREATE TABLE MenuItemPrice (
-	price FLOAT NOT NULL,
-	isGourmet NUMBER(1) NOT NULL,
-	PRIMARY KEY(price)
-);
-grant select on MenuItemPrice to public;
-
-CREATE TABLE MenuItemDetails (
+CREATE TABLE MenuItem (
 	menu_item_name VARCHAR(255),
 	cuisine VARCHAR(255) NULL,
 	price FLOAT NOT NULL,
 	dietary_restrictions VARCHAR(255) NULL,
     license_requirement VARCHAR(255) NOT NULL,
-	PRIMARY KEY(menu_item_name),
-    FOREIGN KEY(price) REFERENCES MenuItemPrice 
+	isGourmet NUMBER(1) NOT NULL,
+	PRIMARY KEY(menu_item_name)
 );
-grant select on MenuItemDetails to public;
+grant select on MenuItem to public;
 
 CREATE TABLE Recommends (
 	chef_name VARCHAR(255),
 	menu_item_name VARCHAR(255),
 	PRIMARY KEY(chef_name, menu_item_name),
-	FOREIGN KEY(chef_name) REFERENCES ChefExperience
+	FOREIGN KEY(chef_name) REFERENCES Chef
 		ON DELETE CASCADE,
-	FOREIGN KEY(menu_item_name) REFERENCES MenuItemDetails
+	FOREIGN KEY(menu_item_name) REFERENCES MenuItem
 		ON DELETE CASCADE
 );
 grant select on Recommends to public;
@@ -133,9 +116,9 @@ CREATE TABLE Makes (
 	chef_name VARCHAR(255),
 	menu_item_name VARCHAR(255),
 	PRIMARY KEY(recipe_ID, chef_name, menu_item_name),
-	FOREIGN KEY(chef_name) REFERENCES ChefExperience
+	FOREIGN KEY(chef_name) REFERENCES Chef
 		ON DELETE CASCADE,
-	FOREIGN KEY(menu_item_name) REFERENCES MenuItemDetails
+	FOREIGN KEY(menu_item_name) REFERENCES MenuItem
 		ON DELETE CASCADE
 );
 grant select on Makes to public;
@@ -144,7 +127,7 @@ CREATE TABLE Food (
 	menu_item_name VARCHAR(255),
 	course VARCHAR(255),
 	PRIMARY KEY(menu_item_name),
-	FOREIGN KEY(menu_item_name) REFERENCES MenuItemDetails
+	FOREIGN KEY(menu_item_name) REFERENCES MenuItem
 		ON DELETE CASCADE
 );
 grant select on Food to public;
@@ -153,27 +136,20 @@ CREATE TABLE Beverages (
 	menu_item_name VARCHAR(255),
 	hasAlcohol NUMBER(1) NOT NULL,
 	PRIMARY KEY(menu_item_name),
-	FOREIGN KEY(menu_item_name) REFERENCES MenuItemDetails
+	FOREIGN KEY(menu_item_name) REFERENCES MenuItem
 		ON DELETE CASCADE
 );
 grant select on Beverages to public;
 
-CREATE TABLE AddOnPrice (
+CREATE TABLE AddOn (
     addon_name VARCHAR(255),
+	menu_item_name VARCHAR(255),
     price FLOAT,
-	PRIMARY KEY(addon_name)
-);
-grant select on AddOnPrice to public;
-
-CREATE TABLE AddonCanHave (
-    menu_item_name VARCHAR(255),
-    addon_name VARCHAR(255),
 	PRIMARY KEY(menu_item_name, addon_name),
-	FOREIGN KEY(menu_item_name) REFERENCES MenuItemDetails
-		ON DELETE CASCADE,
-	FOREIGN KEY(addon_name) REFERENCES AddOnPrice
+	FOREIGN KEY(menu_item_name) REFERENCES MenuItem
+		ON DELETE CASCADE
 );
-grant select on AddonCanHave to public;
+grant select on AddOn to public;
 
 CREATE TABLE Combo (
 	combo_name VARCHAR(255),
@@ -188,7 +164,7 @@ CREATE TABLE PartOf (
 	PRIMARY KEY(combo_name, menu_item_name),
 	FOREIGN KEY(combo_name) REFERENCES Combo
 		ON DELETE CASCADE,
-	FOREIGN KEY(menu_item_name) REFERENCES MenuItemDetails
+	FOREIGN KEY(menu_item_name) REFERENCES MenuItem
 );
 grant select on PartOf to public;
 
@@ -282,51 +258,29 @@ INSERT
 INTO Supplies
 VALUES('Queen Anicas Palace', 'Caviar', '19-FEB-2004');
 
---ChefStatus
---select 'ChefStatus' AS '';
+
+--Chef
+--select 'Chef' AS '';
 
 INSERT
-INTO ChefStatus
-VALUES ('master', 10);
+INTO Chef
+VALUES ('Ryan', 10, 'master', 'Nut');
 
 INSERT
-INTO ChefStatus
-VALUES ('apprentice', 1);
+INTO Chef
+VALUES ('Perry', 1, 'apprentice','Common');
 
 INSERT
-INTO ChefStatus
-VALUES ('master', 20);
+INTO Chef
+VALUES ('Gordon', 20, 'master', 'Halal');
 
 INSERT
-INTO ChefStatus
-VALUES ('novice', 2);
+INTO Chef
+VALUES ('William', 2, 'novice', 'Gluten');
 
 INSERT
-INTO ChefStatus
-VALUES ('beginner', 0);
-
---ChefExperience
---select 'ChefExperience' AS '';
-
-INSERT
-INTO ChefExperience
-VALUES ('Ryan', 10, 'Nut');
-
-INSERT
-INTO ChefExperience
-VALUES ('Perry', 1, 'Common');
-
-INSERT
-INTO ChefExperience
-VALUES ('Gordon', 20, 'Halal');
-
-INSERT
-INTO ChefExperience
-VALUES ('William', 2, 'Gluten');
-
-INSERT
-INTO ChefExperience
-VALUES ('Louis', 0, 'Diary');
+INTO Chef
+VALUES ('Louis', 0, 'beginner','Diary');
 
 --RecipeOwns
 --select 'RecipeOwns' AS '';
@@ -378,91 +332,48 @@ INSERT
 INTO Has
 VALUES (1, 'Garlic', 8, 'item');
 
---MenuItemPrice
---select 'MenuItemPrice' AS '';
+--MenuItem
+--select 'MenuItem' AS '';
 
 INSERT
-INTO MenuItemPrice
-VALUES (10.00, 0);
+INTO MenuItem
+VALUES ('Garlic Beef', 'Chinese', 10.00, NULL, 'Common', 0);
 
 INSERT
-INTO MenuItemPrice
-VALUES (25.00, 0);
+INTO MenuItem
+VALUES ('BigWay Hot Pot', 'Chinese', 25.00, 'Contains Nuts', 'Nut', 0);
 
 INSERT
-INTO MenuItemPrice
-VALUES (45.00, 0);
+INTO MenuItem
+VALUES ('Roast Turkey', 'American', 45.00, 'Halal', 'Halal', 0);
 
 INSERT
-INTO MenuItemPrice
-VALUES (155.67, 1);
+INTO MenuItem
+VALUES ('Beef Wellington', 'American', 155.67, NULL, 'Common', 1);
 
 INSERT
-INTO MenuItemPrice
-VALUES (20.00, 1);
+INTO MenuItem
+VALUES ('Gluten Free Mushroom Pizza', 'Italian', 20.00, 'Gluten Free', 'Gluten', 1);
 
 INSERT
-INTO MenuItemPrice
-VALUES (6.50, 0);
+INTO MenuItem
+VALUES ('Beer', NULL, 6.50, NULL, 'Common', 0);
 
 INSERT
-INTO MenuItemPrice
-VALUES (7.00, 0);
+INTO MenuItem
+VALUES ('Milk Tea', 'Taiwanese', 7.00, 'Contains Milk', 'Diary', 0);
 
 INSERT
-INTO MenuItemPrice
-VALUES (18.00, 1);
+INTO MenuItem
+VALUES ('Candied Bacon Bourbon', NULL, 18.00, NULL, 'Common', 1);
 
 INSERT
-INTO MenuItemPrice
-VALUES (3.25, 0);
+INTO MenuItem
+VALUES ('Lemonade', NULL, 3.25, NULL, 'Common', 0);
 
 INSERT
-INTO MenuItemPrice
-VALUES (1.50, 0);
-
---MenuItemDetails
---select 'MenuItemDetails' AS '';
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Garlic Beef', 'Chinese', 10.00, NULL, 'Common');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('BigWay Hot Pot', 'Chinese', 25.00, 'Contains Nuts', 'Nut');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Roast Turkey', 'American', 45.00, 'Halal', 'Halal');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Beef Wellington', 'American', 155.67, NULL, 'Common');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Gluten Free Mushroom Pizza', 'Italian', 20.00, 'Gluten Free', 'Gluten');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Beer', NULL, 6.50, NULL, 'Common');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Milk Tea', 'Taiwanese', 7.00, 'Contains Milk', 'Diary');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Candied Bacon Bourbon', NULL, 18.00, NULL, 'Common');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Lemonade', NULL, 3.25, NULL, 'Common');
-
-INSERT
-INTO MenuItemDetails
-VALUES ('Root Beer', NULL, 1.50, NULL, 'Common');
+INTO MenuItem
+VALUES ('Root Beer', NULL, 1.50, NULL, 'Common', 0);
 
 --Makes
 --select 'Makes' AS '';
@@ -601,51 +512,28 @@ INSERT
 INTO Uses
 VALUES ('Pan', 'Metal', 4);
 
---AddOnPrice 
---select 'AddOnPrice' AS '';
+--AddOn 
+--select 'AddOn' AS '';
 
 INSERT
-INTO AddOnPrice 
-VALUES ('Fries', 1.00);
+INTO AddOn 
+VALUES ('Fries', 'Beef Wellington', 1.00);
 
 INSERT
-INTO AddOnPrice 
-VALUES ('Mozzarella Sticks', 1.50);
+INTO AddOn 
+VALUES ('Mozzarella Sticks', 'Gluten Free Mushroom Pizza', 1.50);
 
 INSERT
-INTO AddOnPrice 
-VALUES ('Sakura Vanilla Ice Cream', 0.00);
+INTO AddOn 
+VALUES ('Sakura Vanilla Ice Cream', 'BigWay Hot Pot', 0.00);
 
 INSERT
-INTO AddOnPrice 
-VALUES ('Cranberry Sauce', 1.50);
+INTO AddOn 
+VALUES ('Cranberry Sauce', 'Roast Turkey', 1.50);
 
 INSERT
-INTO AddOnPrice 
-VALUES ('Salad', 2.00);
-
---AddonCanHave 
---select 'AddonCanHave' AS '';
-
-INSERT
-INTO AddonCanHave 
-VALUES ('Beef Wellington', 'Fries');
-
-INSERT
-INTO AddonCanHave 
-VALUES ('Gluten Free Mushroom Pizza', 'Mozzarella Sticks');
-
-INSERT
-INTO AddonCanHave 
-VALUES ('BigWay Hot Pot', 'Sakura Vanilla Ice Cream');
-
-INSERT
-INTO AddonCanHave 
-VALUES ('Roast Turkey', 'Cranberry Sauce');
-
-INSERT
-INTO AddonCanHave 
-VALUES ('Beef Wellington', 'Salad');
+INTO AddOn 
+VALUES ('Salad', 'Beef Wellington', 2.00);
 
 --Combo 
 --select 'Combo' AS '';

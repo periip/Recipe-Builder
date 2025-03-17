@@ -79,7 +79,9 @@ async function testOracleConnection() {
 
 async function fetchDemotableFromDb() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM DEMOTABLE');
+        const result = await connection.execute('SELECT * FROM Ingredient');
+        console.log(result.metaData);
+        console.log(result.rows);
         return result.rows;
     }).catch(() => {
         return [];
@@ -89,15 +91,16 @@ async function fetchDemotableFromDb() {
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
+            await connection.execute(`DROP TABLE Ingredient`);
         } catch(err) {
             console.log('Table might not exist, proceeding to create...');
         }
 
         const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE (
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
+            CREATE TABLE Ingredient (
+                ingredient_name VARCHAR(255),
+                price FLOAT,
+                PRIMARY KEY(ingredient_name)
             )
         `);
         return true;
@@ -109,7 +112,7 @@ async function initiateDemotable() {
 async function insertDemotable(id, name) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
+            `INSERT INTO Ingredient (ingredient_name, price) VALUES (:id, :name)`,
             [id, name],
             { autoCommit: true }
         );
@@ -136,7 +139,7 @@ async function updateNameDemotable(oldName, newName) {
 
 async function countDemotable() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
+        const result = await connection.execute('SELECT Count(*) FROM Ingredient');
         return result.rows[0][0];
     }).catch(() => {
         return -1;
@@ -146,8 +149,8 @@ async function countDemotable() {
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
-    initiateDemotable, 
-    insertDemotable, 
-    updateNameDemotable, 
+    initiateDemotable,
+    insertDemotable,
+    updateNameDemotable,
     countDemotable
 };

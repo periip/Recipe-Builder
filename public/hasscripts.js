@@ -38,10 +38,10 @@ async function checkDbConnection() {
 
 // Fetches data from the demotable and displays it.
 async function fetchAndDisplayUsers() {
-    const tableElement = document.getElementById('Recipetable');
+    const tableElement = document.getElementById('Hastable');
     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/recipetable', {
+    const response = await fetch('/hastable', {
         method: 'GET'
     });
 
@@ -63,81 +63,25 @@ async function fetchAndDisplayUsers() {
 }
 
 // This function resets or initializes the demotable.
-async function resetRecipetable() {
-    const response = await fetch("/initiate-recipetable", {
+async function resetHastable() {
+    const response = await fetch("/initiate-hastable", {
         method: 'POST'
     });
     const responseData = await response.json();
 
     if (responseData.success) {
         const messageElement = document.getElementById('resetResultMsg');
-        messageElement.textContent = "Recipetable initiated successfully!";
+        messageElement.textContent = "Hastable initiated successfully!";
         fetchTableData();
     } else {
         alert("Error initiating table!");
     }
 }
 
-// Updates names in the demotable.
-async function updateNameRecipetable(event) {
-    event.preventDefault();
-
-    const oldNameValue = document.getElementById('updateOldName').value;
-    const newNameValue = document.getElementById('updateNewName').value;
-
-    const response = await fetch('/update-name-recipetable', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            oldName: oldNameValue,
-            newName: newNameValue
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('updateNameResultMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Name updated successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error updating name!";
-    }
-}
-
-// Updates names in the demotable.
-async function deleteIdRecipetable(event) {
-    event.preventDefault();
-
-    const recipeIdValue = document.getElementById('deleteOldId').value;
-
-    const response = await fetch('/delete-id-recipetable', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            recipeId: recipeIdValue
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('deleteIdResultMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Recipe ID deleted successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error deleting recipe ID!";
-    }
-}
-
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
-async function countRecipetable() {
-    const response = await fetch("/count-recipetable", {
+async function countHastable() {
+    const response = await fetch("/count-hastable", {
         method: 'GET'
     });
 
@@ -147,7 +91,7 @@ async function countRecipetable() {
     if (responseData.success) {
         const tupleCount = responseData.count;
         console.log(tupleCount);
-        messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
+        messageElement.textContent = `The number of tuples in has table: ${tupleCount}`;
     } else {
         alert("Error in count demotable!");
     }
@@ -160,10 +104,10 @@ async function countRecipetable() {
 window.onload = function () {
     checkDbConnection();
     fetchTableData();
-    document.getElementById("resetRecipetable").addEventListener("click", resetRecipetable);
-    document.getElementById("updataNameRecipetable").addEventListener("submit", updateNameRecipetable);
-    document.getElementById("DeleteIDRecipetable").addEventListener("submit", deleteIdRecipetable);
-    document.getElementById("countRecipetable").addEventListener("click", countRecipetable);
+    document.getElementById("resetHastable").addEventListener("click", resetHastable);
+    // document.getElementById("insertCheftable").addEventListener("submit", insertCheftable);
+    // document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
+    document.getElementById("countHastable").addEventListener("click", countHastable);
 };
 
 // General function to refresh the displayed table data. 

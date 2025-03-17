@@ -196,9 +196,69 @@ async function updateNameRecipetable(oldName, newName) {
     });
 }
 
+async function deleteIdRecipetable(recipeId) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `DELETE FROM RecipeOwns WHERE recipe_ID=:recipeId`,
+            [recipeId],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
 async function countRecipetable() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT Count(*) FROM RecipeOwns');
+        return result.rows[0][0];
+    }).catch(() => {
+        return -1;
+    });
+}
+
+async function fetchHastableFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT * FROM Has');
+        console.log(result.metaData);
+        console.log(result.rows);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function initiateHastable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE Has`);
+        } catch (err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE Has (
+                recipe_ID INTEGER,
+                ingredient_name VARCHAR(255),
+                quantity FLOAT,
+                unit VARCHAR(255),
+                PRIMARY KEY(recipe_ID, ingredient_name),
+                FOREIGN KEY(recipe_ID) REFERENCES RecipeOwns
+                    ON DELETE CASCADE,
+                FOREIGN KEY(ingredient_name) REFERENCES Ingredient
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function countHastable() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT Count(*) FROM Has');
         return result.rows[0][0];
     }).catch(() => {
         return -1;
@@ -215,5 +275,9 @@ module.exports = {
     fetchRecipetableFromDb,
     initiateRecipetable,
     updateNameRecipetable,
-    countRecipetable
+    deleteIdRecipetable,
+    countRecipetable,
+    fetchHastableFromDb,
+    initiateHastable,
+    countHastable
 };

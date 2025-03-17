@@ -93,5 +93,44 @@ router.get("/count-recipetable", async (req, res) => {
     }
 });
 
+router.post("/delete-id-recipetable", async (req, res) => {
+    const { recipeId } = req.body;
+    const updateResult = await appService.deleteIdRecipetable(recipeId);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.get('/hastable', async (req, res) => {
+    const tableContent = await appService.fetchHastableFromDb();
+    res.json({ data: tableContent });
+});
+
+router.post("/initiate-hastable", async (req, res) => {
+    const initiateResult = await appService.initiateHastable();
+    if (initiateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.get("/count-hastable", async (req, res) => {
+    const tableCount = await appService.countHastable();
+    if (tableCount >= 0) {
+        res.json({
+            success: true,
+            count: tableCount
+        });
+    } else {
+        res.status(500).json({
+            success: false,
+            count: tableCount
+        });
+    }
+});
+
 
 module.exports = router;

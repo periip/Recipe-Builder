@@ -138,9 +138,67 @@ async function updateNameDemotable(oldName, newName) {
     });
 }
 
-async function countDemotable() {
+async function countCheftable() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM Ingredient');
+        const result = await connection.execute('SELECT Count(*) FROM Chef');
+        return result.rows[0][0];
+    }).catch(() => {
+        return -1;
+    });
+}
+
+async function fetchRecipetableFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT * FROM RecipeOwns');
+        console.log(result.metaData);
+        console.log(result.rows);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function initiateRecipetable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE RecipeOwns`);
+        } catch (err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE RecipeOwns (
+                recipe_ID INTEGER,
+                chef_name VARCHAR(255) NOT NULL,
+                recipe_name VARCHAR(255) NOT NULL,
+                PRIMARY KEY(recipe_ID),
+                FOREIGN KEY(chef_name) REFERENCES Chef
+                    ON DELETE SET NULL
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function updateNameRecipetable(oldName, newName) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `UPDATE RecipeOwns SET recipe_name=:newName where recipe_name=:oldName`,
+            [newName, oldName],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function countRecipetable() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT Count(*) FROM RecipeOwns');
         return result.rows[0][0];
     }).catch(() => {
         return -1;
@@ -153,5 +211,9 @@ module.exports = {
     initiateCheftable,
     insertCheftable,
     updateNameDemotable,
-    countDemotable
+    countCheftable,
+    fetchRecipetableFromDb,
+    initiateRecipetable,
+    updateNameRecipetable,
+    countRecipetable
 };

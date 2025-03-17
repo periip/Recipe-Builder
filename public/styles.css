@@ -23,7 +23,8 @@ table {
     border-radius: 5px;
 }
 
-th, td {
+th,
+td {
     padding: 12px 15px;
     border-bottom: 1px solid #ddd;
 }
@@ -63,7 +64,8 @@ button:active {
 }
 
 /* INPUT STYLES */
-input, textarea {
+input,
+textarea {
     width: 100%;
     padding: 10px 15px;
     font-size: 16px;
@@ -75,7 +77,8 @@ input, textarea {
     margin-bottom: 10px;
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
     color: #aaa;
 }
 
@@ -83,4 +86,30 @@ input::placeholder, textarea::placeholder {
 .loading-gif {
     height: 1em;
     vertical-align: middle;
+}
+
+.sidebar {
+    height: 100%;
+    width: 18%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(240, 207, 129);
+    overflow-x: hidden;
+    padding-top: 25px;
+}
+
+/* The navigation menu links */
+.sidebar a {
+    padding: 5px 8px 6px 15%;
+    text-decoration: none;
+    font-size: 25px;
+    color: rgb(43, 34, 12);
+    display: block;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidebar a:hover {
+    color: #f1f1f1;
 }

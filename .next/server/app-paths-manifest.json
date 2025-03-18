@@ -1,0 +1,6 @@
+{
+  "/api/controller/route": "app/api/controller/route.js",
+  "/chef/page": "app/chef/page.js",
+  "/has/page": "app/has/page.js",
+  "/recipe/page": "app/recipe/page.js"
+}

@@ -107,6 +107,7 @@ export async function countTable(name) {
     const responseData = await response.json();
     const tupleCount = responseData.count;
     const message = `The number of tuples in demotable: ${tupleCount}`;
+    console.log(message);
     responseHandler(responseData, 'countResultMsg', name, message, "Error counting tuples!");
 }
 
@@ -156,7 +157,7 @@ function responseHandler(data, id, name, message, errMessage) {
     const messageElement = document.getElementById(id);
 
     if (data.success) {
-        data.textContent = message;
+        messageElement.textContent = message;
         fetchTableData(name);
     } else {
         messageElement.textContent = errMessage;

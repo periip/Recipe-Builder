@@ -17,7 +17,9 @@ const dbConfig = {
 // initialize connection pool
 async function initializeConnectionPool() {
     try {
-        oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR })
+        oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR });
+        console.log(process.env.ORACLE_DIR);
+        console.log(dbConfig);
         await oracledb.createPool(dbConfig);
         console.log('Connection pool started');
     } catch (err) {

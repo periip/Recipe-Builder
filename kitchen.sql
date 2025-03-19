@@ -94,7 +94,7 @@ CREATE TABLE Recommends (
 grant select on Recommends to public;
 
 CREATE TABLE Equipment (
-	equpiment_name VARCHAR(255),
+	equipment_name VARCHAR(255),
 	equipment_material VARCHAR(255),
 	PRIMARY KEY(equpiment_name, equipment_material)
 );

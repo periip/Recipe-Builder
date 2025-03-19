@@ -9,10 +9,8 @@ export default function PageComponent({ title, tableName, attributes, children }
     }, [])
     
     return (
-        <>
-            <head>
-                <title>Database App</title>
-            </head>
+        <div>
+            <title>Database App</title>
             <div style={{ marginLeft: '15%' }}>
                 <h1>Database Connection Status:
                     <span id="dbStatus"> </span>
@@ -41,6 +39,6 @@ export default function PageComponent({ title, tableName, attributes, children }
                 <button id="countCheftable" onClick={() => countTable(tableName)}> count </button> <br /><br />
                 <div id="countResultMsg"></div> <br />
             </div>
-        </>
+        </div>
     )
 }

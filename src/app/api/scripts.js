@@ -117,6 +117,7 @@ export async function updateNameRecipetable(event, name) {
 
     const oldNameValue = document.getElementById('updateOldName').value;
     const newNameValue = document.getElementById('updateNewName').value;
+    const attribute = document.getElementById('updateAttribute').value;
 
     const response = await fetch(`/api/controller?action=update-name-recipetable&name=${name}`, {
         method: 'POST',
@@ -125,7 +126,8 @@ export async function updateNameRecipetable(event, name) {
         },
         body: JSON.stringify({
             oldName: oldNameValue,
-            newName: newNameValue
+            newName: newNameValue,
+            attribute: attribute
         })
     });
 

@@ -1,8 +1,5 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/api/controller/route": "app/api/controller/route.js",
-  "/partof/page": "app/partof/page.js",
-  "/chef/page": "app/chef/page.js",
   "/recipe/page": "app/recipe/page.js",
-  "/ingredient/page": "app/ingredient/page.js"
+  "/chef/page": "app/chef/page.js"
 }

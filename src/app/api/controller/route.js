@@ -40,8 +40,8 @@ export async function POST(request) {
         return NextResponse.json({ success });
     }
     if (action === 'update-name-recipetable') {
-        const { oldName, newName } = body;
-        const success = await appService.updateNameRecipetable(oldName, newName);
+        const { oldName, newName , attribute} = body;
+        const success = await appService.updateNameRecipetable(oldName, newName, attribute);
         return NextResponse.json({ success });
     }
     if (action === 'delete-id-recipetable') {

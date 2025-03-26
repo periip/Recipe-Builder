@@ -1,22 +1,25 @@
 const oracledb = require('oracledb');
-const loadEnvFile = require('./utils/envUtil');
+require('dotenv').config();
 
-const envVariables = loadEnvFile('./.env');
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
 const dbConfig = {
-    user: envVariables.ORACLE_USER,
-    password: envVariables.ORACLE_PASS,
-    connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
+    user: process.env.ORACLE_USER,
+    password: process.env.ORACLE_PASS,
+    connectString: `${process.env.ORACLE_HOST}:${process.env.ORACLE_PORT}/${process.env.ORACLE_DBNAME}`,
     poolMin: 1,
     poolMax: 3,
     poolIncrement: 1,
     poolTimeout: 60
 };
 
+
 // initialize connection pool
 async function initializeConnectionPool() {
     try {
+        oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR });
+        console.log(process.env.ORACLE_DIR);
+        console.log(dbConfig);
         await oracledb.createPool(dbConfig);
         console.log('Connection pool started');
     } catch (err) {
@@ -76,9 +79,9 @@ async function testOracleConnection() {
     });
 }
 
-async function fetchCheftableFromDb() {
+async function fetchTableFromDb(name) {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM Chef');
+        const result = await connection.execute(`SELECT * FROM ${name}`);
         console.log(result.metaData);
         console.log(result.rows);
         return result.rows;
@@ -87,34 +90,180 @@ async function fetchCheftableFromDb() {
     });
 }
 
-async function initiateCheftable() {
+async function initiateTable(name) {
     return await withOracleDB(async (connection) => {
         try {
-            await connection.execute(`DROP TABLE Chef`);
+            console.log(`Dropping table ${name}...`);
+            await connection.execute(`DROP TABLE ${name}`);
         } catch (err) {
             console.log('Table might not exist, proceeding to create...');
         }
 
-        const result = await connection.execute(`
-            CREATE TABLE Chef (
-                chef_name VARCHAR(255),
-                years_of_experience INTEGER,
-                seniority VARCHAR(255),
-                cooking_license VARCHAR(255) NOT NULL,
-                PRIMARY KEY(chef_name)
-            )
-        `);
+        let table;
+        switch (name) {
+            case 'Chef':
+                table = `
+                    CREATE TABLE Chef (
+                        chef_name VARCHAR(255),
+                        years_of_experience INTEGER,
+                        seniority VARCHAR(255),
+                        cooking_license VARCHAR(255) NOT NULL,
+                        PRIMARY KEY(chef_name)
+                    )
+                `;
+                break;
+            case 'RecipeOwns':
+                table = `
+                    CREATE TABLE RecipeOwns (
+                        recipe_ID INTEGER,
+                        chef_name VARCHAR(255) NOT NULL,
+                        recipe_name VARCHAR(255) NOT NULL,
+                        PRIMARY KEY(recipe_ID),
+                        FOREIGN KEY(chef_name) REFERENCES Chef
+                            ON DELETE SET NULL
+                    )
+                `;
+                break;
+            case 'Has':
+                table = `
+                    CREATE TABLE Has (
+                        recipe_ID INTEGER,
+                        ingredient_name VARCHAR(255),
+                        quantity FLOAT,
+                        unit VARCHAR(255),
+                        PRIMARY KEY(recipe_ID, ingredient_name),
+                        FOREIGN KEY(recipe_ID) REFERENCES RecipeOwns
+                            ON DELETE CASCADE,
+                        FOREIGN KEY(ingredient_name) REFERENCES Ingredient
+                    )
+                `;
+                break;
+            case 'Ingredient':
+                table = `
+                    CREATE TABLE Equipment (
+                        equpiment_name VARCHAR(255),
+                        equipment_material VARCHAR(255),
+                        PRIMARY KEY(equpiment_name, equipment_material)
+                    )
+                `;
+                break;
+            case 'Equipment':
+                table = `
+                    CREATE TABLE Equipment (
+                        equipment_name VARCHAR(255),
+                        equipment_material VARCHAR(255),
+                        PRIMARY KEY(equipment_name, equipment_material)
+                    )
+                `;
+                break;
+            case 'Supplier':
+                table = `
+                    CREATE TABLE Supplier (
+                        supplier_name VARCHAR(255),
+                        supplier_address VARCHAR(255),
+                        PRIMARY KEY(supplier_name)
+                    )
+                `;
+                break;
+            case 'MenuItem':
+                table = `
+                    CREATE TABLE MenuItem (
+                        menu_item_name VARCHAR(255),
+                        cuisine VARCHAR(255) NULL,
+                        price FLOAT NOT NULL,
+                        dietary_restrictions VARCHAR(255) NULL,
+                        license_requirement VARCHAR(255) NOT NULL,
+                        isGourmet NUMBER(1) NOT NULL,
+                        PRIMARY KEY(menu_item_name)
+                    );
+                `;
+                break;
+            default:
+                return false;
+        }
+
+        await connection.execute(table);
         return true;
-    }).catch(() => {
+    }).catch((e) => {
+        console.log(e);
         return false;
     });
 }
 
-async function insertCheftable(chef_name, years_of_experience, seniority, cooking_license) {
+async function selectEquipmentTable(condition, nameString, materialString) {
     return await withOracleDB(async (connection) => {
+        nameString = nameString.replace(/\s/g, '');
+        materialString = materialString.replace(/\s/g, '');
+        let statement = `SELECT * FROM Equipment `;
+
+        const names = nameString.split(',');
+        if (names[0] === '') {
+            names.pop();
+        }
+
+        const materials = materialString.split(',');
+        if (materials[0] === '') {
+            materials.pop();
+        }
+
+        if (names.length || materials.length) {
+            statement += "WHERE ";
+        }
+
+        for (let i = 0; i < names.length; i++) {
+            statement += `equpiment_name=:name${i}`; // note the typo in the column name and reset other tables
+            if (i != names.length - 1) {
+                statement += ' OR ';
+            } 
+        }
+        if (nameString.length && materialString.length) {
+            if (condition === "both") {
+                statement += " AND ";
+            } else {
+                statement += " OR ";
+            }
+        }
+
+        for (let i = 0; i < materials.length; i++) {
+            statement += `equipment_material=:material${i}`;
+        }
+        console.log(statement);
         const result = await connection.execute(
-            `INSERT INTO Chef VALUES (:chef_name, :years_of_experience, :seniority, :cooking_license)`,
-            [chef_name, years_of_experience, seniority, cooking_license],
+            statement,
+            [...names, ...materials]
+        );
+        console.log(result);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function projectMenuItemTable(...columns) {
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT ${columns.join(',')} FROM MenuItem`;
+        const result = await connection.execute(statement);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function insertTable(name, ...attributes) {
+    return await withOracleDB(async (connection) => {
+        let statement = `INSERT INTO ${name} VALUES (`
+        for (let i = 0; i < attributes.length; i++) {
+            statement += `:${attributes[i]}`;
+            if (i == attributes.length - 1) {
+                statement += ')';
+            } else {
+                statement += ', ';
+            }
+        }
+
+        const result = await connection.execute(
+            statement,
+            attributes,
             { autoCommit: true }
         );
 
@@ -124,72 +273,25 @@ async function insertCheftable(chef_name, years_of_experience, seniority, cookin
     });
 }
 
-async function updateNameDemotable(oldName, newName) {
+async function countTable(name) {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function countCheftable() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM Chef');
+        const result = await connection.execute(`SELECT Count(*) FROM ${name}`);
         return result.rows[0][0];
     }).catch(() => {
         return -1;
     });
 }
 
-async function fetchRecipetableFromDb() {
+async function updateNameRecipetable(oldName, newName, attribute) {
+    console.log(oldName, newName, attribute)
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM RecipeOwns');
-        console.log(result.metaData);
-        console.log(result.rows);
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-async function initiateRecipetable() {
-    return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(`DROP TABLE RecipeOwns`);
-        } catch (err) {
-            console.log('Table might not exist, proceeding to create...');
-        }
-
-        const result = await connection.execute(`
-            CREATE TABLE RecipeOwns (
-                recipe_ID INTEGER,
-                chef_name VARCHAR(255) NOT NULL,
-                recipe_name VARCHAR(255) NOT NULL,
-                PRIMARY KEY(recipe_ID),
-                FOREIGN KEY(chef_name) REFERENCES Chef
-                    ON DELETE SET NULL
-            )
-        `);
-        return true;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function updateNameRecipetable(oldName, newName) {
-    return await withOracleDB(async (connection) => {
+        let statement = `UPDATE RecipeOwns SET ${attribute}=:newName WHERE ${attribute}= :oldName`;
+        
         const result = await connection.execute(
-            `UPDATE RecipeOwns SET recipe_name=:newName where recipe_name=:oldName`,
+            statement,
             [newName, oldName],
             { autoCommit: true }
         );
-
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
         return false;
@@ -210,74 +312,14 @@ async function deleteIdRecipetable(recipeId) {
     });
 }
 
-async function countRecipetable() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM RecipeOwns');
-        return result.rows[0][0];
-    }).catch(() => {
-        return -1;
-    });
-}
-
-async function fetchHastableFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM Has');
-        console.log(result.metaData);
-        console.log(result.rows);
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-async function initiateHastable() {
-    return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(`DROP TABLE Has`);
-        } catch (err) {
-            console.log('Table might not exist, proceeding to create...');
-        }
-
-        const result = await connection.execute(`
-            CREATE TABLE Has (
-                recipe_ID INTEGER,
-                ingredient_name VARCHAR(255),
-                quantity FLOAT,
-                unit VARCHAR(255),
-                PRIMARY KEY(recipe_ID, ingredient_name),
-                FOREIGN KEY(recipe_ID) REFERENCES RecipeOwns
-                    ON DELETE CASCADE,
-                FOREIGN KEY(ingredient_name) REFERENCES Ingredient
-            )
-        `);
-        return true;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function countHastable() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM Has');
-        return result.rows[0][0];
-    }).catch(() => {
-        return -1;
-    });
-}
-
 module.exports = {
     testOracleConnection,
-    fetchCheftableFromDb,
-    initiateCheftable,
-    insertCheftable,
-    updateNameDemotable,
-    countCheftable,
-    fetchRecipetableFromDb,
-    initiateRecipetable,
+    fetchTableFromDb,
+    initiateTable,
+    insertTable,
+    countTable,
     updateNameRecipetable,
     deleteIdRecipetable,
-    countRecipetable,
-    fetchHastableFromDb,
-    initiateHastable,
-    countHastable
+    selectEquipmentTable,
+    projectMenuItemTable
 };

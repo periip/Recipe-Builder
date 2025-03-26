@@ -1,6 +1,0 @@
-{
-  "/api/controller/route": "app/api/controller/route.js",
-  "/chef/page": "app/chef/page.js",
-  "/supplier/page": "app/supplier/page.js",
-  "/menuitem/page": "app/menuitem/page.js"
-}

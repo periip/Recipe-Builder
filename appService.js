@@ -17,7 +17,9 @@ const dbConfig = {
 // initialize connection pool
 async function initializeConnectionPool() {
     try {
-        oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR })
+        oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR });
+        console.log(process.env.ORACLE_DIR);
+        console.log(dbConfig);
         await oracledb.createPool(dbConfig);
         console.log('Connection pool started');
     } catch (err) {
@@ -271,20 +273,6 @@ async function insertTable(name, ...attributes) {
     });
 }
 
-async function updateNameDemotable(oldName, newName) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
 async function countTable(name) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`SELECT Count(*) FROM ${name}`);
@@ -294,14 +282,16 @@ async function countTable(name) {
     });
 }
 
-async function updateNameRecipetable(oldName, newName) {
+async function updateNameRecipetable(oldName, newName, attribute) {
+    console.log(oldName, newName, attribute)
     return await withOracleDB(async (connection) => {
+        let statement = `UPDATE RecipeOwns SET ${attribute}=:newName WHERE ${attribute}= :oldName`;
+        
         const result = await connection.execute(
-            `UPDATE RecipeOwns SET recipe_name=:newName where recipe_name=:oldName`,
+            statement,
             [newName, oldName],
             { autoCommit: true }
         );
-
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
         return false;
@@ -327,7 +317,6 @@ module.exports = {
     fetchTableFromDb,
     initiateTable,
     insertTable,
-    updateNameDemotable,
     countTable,
     updateNameRecipetable,
     deleteIdRecipetable,

@@ -1,6 +1,9 @@
 # Dependency directories
 node_modules/
 
+# Build output
+.next/
+
 # Logs
 *.log
 

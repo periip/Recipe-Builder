@@ -18,8 +18,6 @@ const dbConfig = {
 async function initializeConnectionPool() {
     try {
         oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR });
-        console.log(process.env.ORACLE_DIR);
-        console.log(dbConfig);
         await oracledb.createPool(dbConfig);
         console.log('Connection pool started');
     } catch (err) {
@@ -109,6 +107,15 @@ async function initiateTable(name) {
                         seniority VARCHAR(255),
                         cooking_license VARCHAR(255) NOT NULL,
                         PRIMARY KEY(chef_name)
+                    )
+                `;
+                break;
+            case 'Ingredient':
+                table =`
+                    CREATE TABLE Ingredient (
+                        ingredient_name VARCHAR(255),
+                        price FLOAT,
+                        PRIMARY KEY(ingredient_name)
                     )
                 `;
                 break;
@@ -249,6 +256,26 @@ async function projectMenuItemTable(...columns) {
     });
 }
 
+async function joinRecipeIngTable(ingredient) {
+    console.log(ingredient)
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT r.chef_name, r.recipe_ID, r.recipe_name, i.ingredient_name, h.quantity, h.unit
+                        FROM RecipeOwns r, Has h, Ingredient i 
+                        WHERE r.recipe_ID = h.recipe_ID AND h.ingredient_name = i.ingredient_name AND i.ingredient_name = :ing`;
+        const result = await connection.execute(
+            statement,
+            [ingredient],
+            { autoCommit: true }
+        );
+        console.log(result)
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
+
 async function insertTable(name, ...attributes) {
     return await withOracleDB(async (connection) => {
         let statement = `INSERT INTO ${name} VALUES (`
@@ -321,5 +348,6 @@ module.exports = {
     updateNameRecipetable,
     deleteIdRecipetable,
     selectEquipmentTable,
-    projectMenuItemTable
+    projectMenuItemTable,
+    joinRecipeIngTable
 };

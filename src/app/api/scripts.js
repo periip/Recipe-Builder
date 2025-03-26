@@ -98,6 +98,7 @@ export async function insertCheftable(event, name) {
     });
 
     const responseData = await response.json();
+    console.log(responseData)
     responseHandler(responseData, 'insertResultMsg', name, "Data inserted successfully!", "Error inserting data!");
 }
 
@@ -174,6 +175,46 @@ export async function projectMenuItemTable(event, attributes) {
     // cant refetch data from the table
 }
 
+
+export async function JoinRecipeIngTable(event, attribute) {
+    event.preventDefault();
+    const tableElement = document.getElementById('recipeIngTable');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    const ingredient = event.target.elements[0].value
+    tableBody.innerHTML = '';
+    tableHead.innerHTML = '';
+
+    const response = await fetch(`/api/controller?action=join-recipe-ing-table`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            ingredient
+        })
+    });
+
+    const responseData = await response.json();
+    const data = responseData.data;
+
+    attribute.forEach((attr) => {
+        const th = document.createElement('th');
+        th.textContent = attr;
+        tableHead.appendChild(th);
+    })
+    
+    data.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+
+    dataResponseHandler(responseData, 'selectResultMsg', attribute, "Found Successfully!", "No Such Ingredient");
+}
+
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
 export async function countTable(name) {
@@ -236,6 +277,17 @@ function responseHandler(data, id, name, message, errMessage) {
     const messageElement = document.getElementById(id);
 
     if (data.success) {
+        messageElement.textContent = message;
+        fetchTableData(name);
+    } else {
+        messageElement.textContent = errMessage;
+    }
+}
+
+function dataResponseHandler(data, id, name, message, errMessage) {
+    const messageElement = document.getElementById(id);
+
+    if (data) {
         messageElement.textContent = message;
         fetchTableData(name);
     } else {

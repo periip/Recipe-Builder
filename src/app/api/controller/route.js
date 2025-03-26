@@ -58,6 +58,11 @@ export async function POST(request) {
         const data = await appService.projectMenuItemTable(...attributes);
         return NextResponse.json({ data });
     }
+    if (action == 'join-recipe-ing-table') {
+        const { ingredient } = body;
+        const data = await appService.joinRecipeIngTable(ingredient);
+        return NextResponse.json({ data });
+    }
     
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 }

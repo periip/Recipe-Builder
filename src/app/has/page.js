@@ -7,7 +7,6 @@ export default function HasPage() {
 
     return (
         <PageLayout title={title} tableName={tableName} attributes={attributes} >
-            
         </PageLayout>
     )
 }

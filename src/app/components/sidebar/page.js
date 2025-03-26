@@ -7,6 +7,9 @@ export default function SideBar() {
             <Link className="active" href="/chef"> Chef </Link>
             <Link href="/recipe"> Recipe </Link>
             <Link href="/has"> Ingredients In Recipe </Link>
+            <Link href="/equipment"> Equipment </Link>
+            <Link href="/supplier"> Supplier</Link>
+            <Link href="/menuitem"> MenuItem</Link>
         </div>  
     )
 }

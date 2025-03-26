@@ -91,6 +91,7 @@ async function fetchTableFromDb(name) {
 async function initiateTable(name) {
     return await withOracleDB(async (connection) => {
         try {
+            console.log(`Dropping table ${name}...`);
             await connection.execute(`DROP TABLE ${name}`);
         } catch (err) {
             console.log('Table might not exist, proceeding to create...');
@@ -135,14 +136,114 @@ async function initiateTable(name) {
                     )
                 `;
                 break;
+            case 'Ingredient':
+                table = `
+                    CREATE TABLE Equipment (
+                        equpiment_name VARCHAR(255),
+                        equipment_material VARCHAR(255),
+                        PRIMARY KEY(equpiment_name, equipment_material)
+                    )
+                `;
+                break;
+            case 'Equipment':
+                table = `
+                    CREATE TABLE Equipment (
+                        equipment_name VARCHAR(255),
+                        equipment_material VARCHAR(255),
+                        PRIMARY KEY(equipment_name, equipment_material)
+                    )
+                `;
+                break;
+            case 'Supplier':
+                table = `
+                    CREATE TABLE Supplier (
+                        supplier_name VARCHAR(255),
+                        supplier_address VARCHAR(255),
+                        PRIMARY KEY(supplier_name)
+                    )
+                `;
+                break;
+            case 'MenuItem':
+                table = `
+                    CREATE TABLE MenuItem (
+                        menu_item_name VARCHAR(255),
+                        cuisine VARCHAR(255) NULL,
+                        price FLOAT NOT NULL,
+                        dietary_restrictions VARCHAR(255) NULL,
+                        license_requirement VARCHAR(255) NOT NULL,
+                        isGourmet NUMBER(1) NOT NULL,
+                        PRIMARY KEY(menu_item_name)
+                    );
+                `;
+                break;
             default:
                 return false;
         }
 
         await connection.execute(table);
         return true;
-    }).catch(() => {
+    }).catch((e) => {
+        console.log(e);
         return false;
+    });
+}
+
+async function selectEquipmentTable(condition, nameString, materialString) {
+    return await withOracleDB(async (connection) => {
+        nameString = nameString.replace(/\s/g, '');
+        materialString = materialString.replace(/\s/g, '');
+        let statement = `SELECT * FROM Equipment `;
+
+        const names = nameString.split(',');
+        if (names[0] === '') {
+            names.pop();
+        }
+
+        const materials = materialString.split(',');
+        if (materials[0] === '') {
+            materials.pop();
+        }
+
+        if (names.length || materials.length) {
+            statement += "WHERE ";
+        }
+
+        for (let i = 0; i < names.length; i++) {
+            statement += `equpiment_name=:name${i}`; // note the typo in the column name and reset other tables
+            if (i != names.length - 1) {
+                statement += ' OR ';
+            } 
+        }
+        if (nameString.length && materialString.length) {
+            if (condition === "both") {
+                statement += " AND ";
+            } else {
+                statement += " OR ";
+            }
+        }
+
+        for (let i = 0; i < materials.length; i++) {
+            statement += `equipment_material=:material${i}`;
+        }
+        console.log(statement);
+        const result = await connection.execute(
+            statement,
+            [...names, ...materials]
+        );
+        console.log(result);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function projectMenuItemTable(...columns) {
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT ${columns.join(',')} FROM MenuItem`;
+        const result = await connection.execute(statement);
+        return result.rows;
+    }).catch(() => {
+        return [];
     });
 }
 
@@ -230,4 +331,6 @@ module.exports = {
     countTable,
     updateNameRecipetable,
     deleteIdRecipetable,
+    selectEquipmentTable,
+    projectMenuItemTable
 };

@@ -19,7 +19,6 @@ export async function GET(request) {
         const isConnect = await appService.testOracleConnection();
         return NextResponse.json({ message: isConnect ? "connected" : "unable to connect" });
     }
-
     return NextResponse.json({ error: 'Invalid table query' }, { status: 400 });
 }
 
@@ -49,6 +48,16 @@ export async function POST(request) {
         const success = await appService.deleteIdRecipetable(recipeId);
         return NextResponse.json({ success });
     }
-
+    if (action === 'select-equipment-table') {
+        const { condition, nameString, materialString } = body;
+        const data = await appService.selectEquipmentTable(condition, nameString, materialString);
+        return NextResponse.json({ data });
+    }
+    if (action === 'project-menu-item-table') {
+        const { attributes } = body;
+        const data = await appService.projectMenuItemTable(...attributes);
+        return NextResponse.json({ data });
+    }
+    
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 }

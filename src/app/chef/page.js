@@ -10,7 +10,7 @@ export default function ChefPage() {
     return (
         <PageLayout title={title} tableName={tableName} attributes={attributes}>
             <h2>Insert Values into { title } Table</h2>
-            <form id="insertCheftable" onSubmit={e => insertCheftable(e, tableName)}>
+            <form onSubmit={e => insertCheftable(e, tableName)}>
                 Name: <input type="text" id="insertChefName" placeholder="Enter Name" required /> <br /><br />
                 Years of Experience: <input type="number" id="insertYOE" placeholder="Enter Years of Experience" maxLength="20" /> <br /><br />
                 Seniority: <select id="insertSeniority">

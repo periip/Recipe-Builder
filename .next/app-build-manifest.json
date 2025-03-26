@@ -16,15 +16,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/controller/route.js"
     ],
-    "/recipe/page": [
+    "/supplier/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/recipe/page.js"
+      "static/chunks/app/supplier/page.js"
     ],
-    "/has/page": [
+    "/menuitem/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/has/page.js"
+      "static/chunks/app/menuitem/page.js"
     ]
   }
 }

@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { resetTable, countTable, checkDbConnection, fetchTableData } from '../../api/scripts.js'
 
-export default function PageComponent({ title, tableName, attributes, children }) {
+export default function PageLayout({ title, tableName, attributes, children }) {
     useEffect(() => {
         checkDbConnection();
         fetchTableData(tableName);

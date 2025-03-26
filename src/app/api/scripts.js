@@ -64,7 +64,11 @@ export async function fetchAndDisplayUsers(name) {
 // This function resets or initializes the demotable.
 export async function resetTable(name) {
     const response = await fetch(`/api/controller?action=initiate-table&name=${name}`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
     });
     const responseData = await response.json();
 
@@ -95,6 +99,79 @@ export async function insertCheftable(event, name) {
 
     const responseData = await response.json();
     responseHandler(responseData, 'insertResultMsg', name, "Data inserted successfully!", "Error inserting data!");
+}
+
+export async function selectEquipmentTable(event, name) {
+    event.preventDefault();
+    const tableElement = document.getElementById('Cheftable');
+    const tableBody = tableElement.querySelector('tbody');
+    tableBody.innerHTML = '';
+
+    const condition = event.target.elements[0].checked ? "both" : "individual";
+    const nameString = event.target.elements[2].value
+    const materialString = event.target.elements[3].value
+
+
+    const response = await fetch(`/api/controller?action=select-equipment-table`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            condition,
+            nameString,
+            materialString
+        })
+    });
+
+    const responseData = await response.json();
+    const data = responseData.data;
+
+    data.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+    // cant refetch data from the table
+}
+
+export async function projectMenuItemTable(event, attributes) {
+    event.preventDefault();
+    const tableElement = document.getElementById('Cheftable');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    tableBody.innerHTML = '';
+    tableHead.innerHTML = '';
+
+    const response = await fetch(`/api/controller?action=project-menu-item-table`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            attributes
+        })
+    });
+
+    const responseData = await response.json();
+    const data = responseData.data;
+    
+    attributes.forEach((attr, index) => {
+        const th = document.createElement('th');
+        th.textContent = attr;
+        tableHead.appendChild(th);
+    })
+    
+    data.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+    // cant refetch data from the table
 }
 
 // Counts rows in the demotable.

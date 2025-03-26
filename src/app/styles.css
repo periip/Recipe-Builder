@@ -77,6 +77,30 @@ textarea {
     margin-bottom: 10px;
 }
 
+input[type="radio"] {
+
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    margin-right: 20px;
+
+    position: relative;
+    top: 4px;
+}
+
+input:checked {
+    border: 6px solid black;
+}
+
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 20px;
+    vertical-align: middle;
+    position: relative;
+    margin: 10px
+}
+
 input::placeholder,
 textarea::placeholder {
     color: #aaa;

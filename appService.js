@@ -274,7 +274,20 @@ async function joinRecipeIngTable(ingredient) {
     });
 }
 
-
+async function groupbyCuisineAvgPrice() {
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT cuisine, AVG(price)
+                        FROM MenuItem
+                        GROUP BY cuisine
+                        ORDER BY AVG(price) ASC`;
+        const result = await connection.execute(
+            statement
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
 
 async function insertTable(name, ...attributes) {
     return await withOracleDB(async (connection) => {
@@ -349,5 +362,6 @@ module.exports = {
     deleteIdRecipetable,
     selectEquipmentTable,
     projectMenuItemTable,
+    groupbyCuisineAvgPrice,
     joinRecipeIngTable
 };

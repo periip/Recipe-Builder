@@ -215,6 +215,38 @@ export async function JoinRecipeIngTable(event, attribute) {
     dataResponseHandler(responseData, 'selectResultMsg', attribute, "Found Successfully!", "No Such Ingredient");
 }
 
+export async function groupbyCuisineAvgPrice(event, attribute) {
+    event.preventDefault();
+    const tableElement = document.getElementById('cuisineAvgPrice');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    tableBody.innerHTML = '';
+    tableHead.innerHTML = '';
+
+    const response = await fetch(`/api/controller?action=group_by_cuisine_table`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const data = responseData.data;
+
+    attribute.forEach((attr) => {
+        const th = document.createElement('th');
+        th.textContent = attr;
+        tableHead.appendChild(th);
+    })
+    
+    data.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+
+    dataResponseHandler(responseData, 'selectResultMsg', attribute, "Found Successfully!", "No Such Ingredient");
+}
+
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
 export async function countTable(name) {

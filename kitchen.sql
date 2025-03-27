@@ -456,6 +456,14 @@ VALUES ('Gordon', 'Beef Wellington');
 
 INSERT
 INTO Recommends
+VALUES ('Gordon', 'Gluten Free Mushroom Pizza');
+
+INSERT
+INTO Recommends
+VALUES ('Gordon', 'Candied Bacon Bourbon');
+
+INSERT
+INTO Recommends
 VALUES ('Perry', 'Garlic Beef');
 
 INSERT

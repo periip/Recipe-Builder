@@ -23,6 +23,11 @@ export async function GET(request) {
         const data = await appService.groupbyCuisineAvgPrice();
         return NextResponse.json({ data });
     }
+    if (action == 'get_gourmet_recs') {
+        const data = await appService.getGourmetRecs();
+        return NextResponse.json({ data });
+    }
+
     return NextResponse.json({ error: 'Invalid table query' }, { status: 400 });
 }
 

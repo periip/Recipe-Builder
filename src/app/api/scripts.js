@@ -305,6 +305,38 @@ export async function deleteIDRecipetable(event, name) {
     responseHandler(responseData, 'deleteIdResultMsg', name, "Recipe deleted successfully!", "Error deleting recipe!");
 }
 
+export async function getGourmetRecs(event, attributes) {
+    event.preventDefault();
+    const tableElement = document.getElementById('gourmetRecs');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    tableBody.innerHTML = '';
+    tableHead.innerHTML = '';
+
+    const response = await fetch(`/api/controller?action=get_gourmet_recs`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const data = responseData.data;
+
+    attributes.forEach((attr) => {
+        const th = document.createElement('th');
+        th.textContent = attr;
+        tableHead.appendChild(th);
+    })
+    
+    data.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+
+    dataResponseHandler(responseData, 'selectResultMsg', attributes, "Found Successfully!", "No Such Chef");
+}
+
 function responseHandler(data, id, name, message, errMessage) {
     const messageElement = document.getElementById(id);
 

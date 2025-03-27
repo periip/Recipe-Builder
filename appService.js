@@ -352,6 +352,28 @@ async function deleteIdRecipetable(recipeId) {
     });
 }
 
+async function getGourmetRecs() {
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT *
+                        FROM Recommends R1
+                        WHERE NOT EXISTS (
+                            (SELECT M.menu_item_name
+                            FROM MenuItem M
+                            WHERE isGourmet = 1)
+                            MINUS
+                            (SELECT R2.menu_item_name
+                            FROM Recommends R2
+                            WHERE R1.chef_name = R2.chef_name)
+                        )`;
+        const result = await connection.execute(
+            statement
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 module.exports = {
     testOracleConnection,
     fetchTableFromDb,
@@ -363,5 +385,6 @@ module.exports = {
     selectEquipmentTable,
     projectMenuItemTable,
     groupbyCuisineAvgPrice,
-    joinRecipeIngTable
+    joinRecipeIngTable,
+    getGourmetRecs,
 };

@@ -19,6 +19,10 @@ export async function GET(request) {
         const isConnect = await appService.testOracleConnection();
         return NextResponse.json({ message: isConnect ? "connected" : "unable to connect" });
     }
+    if (action == 'group_by_cuisine_table') {
+        const data = await appService.groupbyCuisineAvgPrice();
+        return NextResponse.json({ data });
+    }
     return NextResponse.json({ error: 'Invalid table query' }, { status: 400 });
 }
 
@@ -63,6 +67,5 @@ export async function POST(request) {
         const data = await appService.joinRecipeIngTable(ingredient);
         return NextResponse.json({ data });
     }
-    
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 }

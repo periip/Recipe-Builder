@@ -366,7 +366,7 @@ export async function getAvgYOE(event, attributes) {
         });
     });
 
-    dataResponseHandler(responseData, 'selectResultMsg', attributes, "Found Successfully!", "Not enough Chefs");
+    responseHandler(responseData, 'selectResultMsg', attributes, "Found Successfully!", "Not enough Chefs");
 }
 
 export async function getGourmetRecs(event, attributes) {
@@ -398,7 +398,7 @@ export async function getGourmetRecs(event, attributes) {
         });
     });
 
-    dataResponseHandler(responseData, 'selectResultMsg', attributes, "Found Successfully!", "No Such Chef");
+    responseHandler(responseData, 'selectResultMsg', attributes, "Found Successfully!", "No Such Chef");
 }
 
 function responseHandler(data, id, name, message, errMessage) {

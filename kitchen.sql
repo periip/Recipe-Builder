@@ -178,6 +178,10 @@ VALUES ('Garlic', 1.00);
 
 INSERT
 INTO Ingredient
+VALUES ('Salt', 3.35);
+
+INSERT
+INTO Ingredient
 VALUES ('Turkey',  35.00);
 
 INSERT
@@ -232,11 +236,15 @@ INTO Supplier
 VALUES('Queen Anicas Palace');
 
 --Supplies
---select 'Supplies' AS '';
+select 'Supplies' AS '';
 
 INSERT
 INTO Supplies
 VALUES ('Joels Orchard', 'Apple', '01-MAR-2021');
+
+INSERT
+INTO Supplies
+VALUES ('Joels Orchard', 'Salt', '01-MAR-2021');
 
 INSERT
 INTO Supplies
@@ -260,7 +268,7 @@ VALUES('Queen Anicas Palace', 'Caviar', '19-FEB-2004');
 
 
 --Chef
---select 'Chef' AS '';
+select 'Chef' AS '';
 
 INSERT
 INTO Chef
@@ -294,8 +302,12 @@ INSERT
 INTO Chef
 VALUES ('Louis Sr.', 1, 'beginner','Dairy');
 
+INSERT
+INTO Chef
+VALUES ('Louis', 10000, 'master','All');
+
 --RecipeOwns
---select 'RecipeOwns' AS '';
+select 'RecipeOwns' AS '';
 
 INSERT
 INTO RecipeOwns
@@ -322,7 +334,7 @@ INTO RecipeOwns
 VALUES (6, 'Louis', 'Apple Pie');
 
 --Has
---select 'Has' AS '';
+select 'Has' AS '';
 
 INSERT
 INTO Has
@@ -343,6 +355,30 @@ VALUES (5, 'Dough', 3, 'Ib');
 INSERT
 INTO Has
 VALUES (1, 'Garlic', 8, 'item');
+
+INSERT
+INTO Has
+VALUES (1, 'Salt', 1, 'tablespoon');
+
+INSERT
+INTO Has
+VALUES (2, 'Salt', 1, 'tablespoon');
+
+INSERT
+INTO Has
+VALUES (3, 'Salt', 1, 'tablespoon');
+
+INSERT
+INTO Has
+VALUES (4, 'Salt', 4, 'teaspoon');
+
+INSERT
+INTO Has
+VALUES (5, 'Salt', 4, 'teaspoon');
+
+INSERT
+INTO Has
+VALUES (6, 'Salt', 2, 'teaspoon');
 
 --MenuItem
 --select 'MenuItem' AS '';

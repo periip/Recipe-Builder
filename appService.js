@@ -197,6 +197,60 @@ async function initiateTable(name) {
     });
 }
 
+async function insertTable(name, ...attributes) {
+    return await withOracleDB(async (connection) => {
+        let statement = `INSERT INTO ${name} VALUES (`
+        for (let i = 0; i < attributes.length; i++) {
+            statement += `:${attributes[i]}`;
+            if (i == attributes.length - 1) {
+                statement += ')';
+            } else {
+                statement += ', ';
+            }
+        }
+
+        const result = await connection.execute(
+            statement,
+            attributes,
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function updateNameRecipetable(oldName, newName, attribute) {
+    console.log(oldName, newName, attribute)
+    return await withOracleDB(async (connection) => {
+        let statement = `UPDATE RecipeOwns SET ${attribute}=:newName WHERE ${attribute}= :oldName`;
+        
+        const result = await connection.execute(
+            statement,
+            [newName, oldName],
+            { autoCommit: true }
+        );
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function deleteIdRecipetable(recipeId) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `DELETE FROM RecipeOwns WHERE recipe_ID=:recipeId`,
+            [recipeId],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
 async function selectEquipmentTable(condition, nameString, materialString) {
     return await withOracleDB(async (connection) => {
         nameString = nameString.replace(/\s/g, '');
@@ -304,69 +358,6 @@ async function groupbyCuisineHavingMinPrice() {
     });
 }
 
-async function insertTable(name, ...attributes) {
-    return await withOracleDB(async (connection) => {
-        let statement = `INSERT INTO ${name} VALUES (`
-        for (let i = 0; i < attributes.length; i++) {
-            statement += `:${attributes[i]}`;
-            if (i == attributes.length - 1) {
-                statement += ')';
-            } else {
-                statement += ', ';
-            }
-        }
-
-        const result = await connection.execute(
-            statement,
-            attributes,
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function countTable(name) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(`SELECT Count(*) FROM ${name}`);
-        return result.rows[0][0];
-    }).catch(() => {
-        return -1;
-    });
-}
-
-async function updateNameRecipetable(oldName, newName, attribute) {
-    console.log(oldName, newName, attribute)
-    return await withOracleDB(async (connection) => {
-        let statement = `UPDATE RecipeOwns SET ${attribute}=:newName WHERE ${attribute}= :oldName`;
-        
-        const result = await connection.execute(
-            statement,
-            [newName, oldName],
-            { autoCommit: true }
-        );
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function deleteIdRecipetable(recipeId) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `DELETE FROM RecipeOwns WHERE recipe_ID=:recipeId`,
-            [recipeId],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
 async function getAvgYOE() {
     return await withOracleDB(async (connection) => {
         let statement = `SELECT C1.seniority, AVG(C1.years_of_experience) AS avgyoe, COUNT(*) AS count
@@ -389,9 +380,9 @@ async function getGourmetRecs() {
         let statement = `SELECT *
                         FROM Recommends R1
                         WHERE NOT EXISTS (
-                            (SELECT M.menu_item_name
+                            SELECT M.menu_item_name
                             FROM MenuItem M
-                            WHERE isGourmet = 1)
+                            WHERE isGourmet = 1
                             MINUS
                             (SELECT R2.menu_item_name
                             FROM Recommends R2
@@ -406,6 +397,17 @@ async function getGourmetRecs() {
     });
 }
 
+
+async function countTable(name) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`SELECT Count(*) FROM ${name}`);
+        return result.rows[0][0];
+    }).catch(() => {
+        return -1;
+    });
+}
+
+
 module.exports = {
     testOracleConnection,
     fetchTableFromDb,
@@ -418,7 +420,7 @@ module.exports = {
     projectMenuItemTable,
     groupbyCuisineAvgPrice,
     joinRecipeIngTable,
-    groupbyCuisineHavingMinPrice
+    groupbyCuisineHavingMinPrice,
     getGourmetRecs,
     getAvgYOE,
 };

@@ -11,8 +11,9 @@ export default function HasPage() {
         <PageLayout title={title} tableName={tableName} attributes={attributes} >
             <h2>Get the Chefs that recommend all Gourmet Menu Items</h2>
             <form onSubmit={(e) => getGourmetRecs(e, attributes)}>
-                <button type="submit"> Apply </button> <br />
+                <button type="submit"> Apply </button>
             </form>
+            <br />
             <table id="gourmetRecs" border="1">
                 <thead>
                     <tr>

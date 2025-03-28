@@ -33,7 +33,7 @@ export default function MenuItemPage() {
             <p>Choose which columns you want to view in the table.</p>
             <form onSubmit={(e) => projectMenuItemTable(e, selectedAttributes)}>
                 <div>
-                    <input type="checkbox" id="all" name="all" value="all" onClick={handleClick} Checked={isAllSelected} />
+                    <input type="checkbox" id="all" name="all" value="all" onClick={handleClick} checked={isAllSelected} />
                     <label for="all">Select all</label>
                 </div>
                 {attributes.map((attr, index) => (
@@ -48,17 +48,18 @@ export default function MenuItemPage() {
             <div id="updateNameResultMsg"></div>
             <h2>Get the Average Price by the Cuisine Type</h2>
             <form onSubmit={(e) => groupbyCuisineAvgPrice(e, ["cuisine", "avg price"])}>
-                <button type="submit"> Apply </button> <br />
+                <button type="submit"> Apply </button>
             </form>
+            <br />
             <table id="cuisineAvgPrice" border="1">
-                    <thead>
-                        <tr>
-                            {["cuisine", "avg price"]?.map((attr, index) => <th key={index}>{attr}</th>)}
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                <thead>
+                    <tr>
+                        {["cuisine", "avg price"]?.map((attr, index) => <th key={index}>{attr}</th>)}
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
             <div id="selectResultMsg"></div>
         </PageLayout>
     )

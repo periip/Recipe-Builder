@@ -72,7 +72,7 @@ export async function resetTable(name) {
     });
     const responseData = await response.json();
 
-    responseHandler(responseData, 'resetResultMsg', name, "Table reset successfully!", "Error initiating table!");
+    responseHandler(responseData, 'resetResultMsg', name, "Table reset successfully!", "Error initiating table!", true);
 }
 
 // Inserts new records into the demotable.
@@ -212,7 +212,7 @@ export async function JoinRecipeIngTable(event, attribute) {
         });
     });
 
-    dataResponseHandler(responseData, 'selectResultMsg', attribute, "Found Successfully!", "No Such Ingredient");
+    responseHandler(responseData, 'selectResultMsg', null, "Found Successfully!", "No Such Ingredient");
 }
 
 export async function groupbyCuisineAvgPrice(event, attribute) {
@@ -244,7 +244,39 @@ export async function groupbyCuisineAvgPrice(event, attribute) {
         });
     });
 
-    dataResponseHandler(responseData, 'selectResultMsg', attribute, "Found Successfully!", "No Such Ingredient");
+    responseHandler(responseData, 'selectResultMsg', null, "Found Successfully!", "No Such Ingredient");
+}
+
+export async function groupbyGourmetHavingPrice(event) {
+    event.preventDefault();
+    const tableElement = document.getElementById('cuisineHavingPrice');
+    const tableBody = tableElement.querySelector('tbody');
+    const tableHead = tableElement.querySelector('thead');
+    tableBody.innerHTML = '';
+    tableHead.innerHTML = '';
+
+    const response = await fetch(`/api/controller?action=group_by_cuisine_having_min_price_table`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const data = responseData.data;
+
+    ["Cuisine", "isGourmet", "Min Price"].forEach((attr) => {
+        const th = document.createElement('th');
+        th.textContent = attr;
+        tableHead.appendChild(th);
+    })
+    
+    data.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+
+    responseHandler(responseData, 'havingResultMsg', null, "Found Successfully!", "No Such Ingredient");
 }
 
 // Counts rows in the demotable.
@@ -372,20 +404,11 @@ export async function getGourmetRecs(event, attributes) {
 function responseHandler(data, id, name, message, errMessage) {
     const messageElement = document.getElementById(id);
 
-    if (data.success) {
-        messageElement.textContent = message;
-        fetchTableData(name);
-    } else {
-        messageElement.textContent = errMessage;
-    }
-}
-
-function dataResponseHandler(data, id, name, message, errMessage) {
-    const messageElement = document.getElementById(id);
-
     if (data) {
         messageElement.textContent = message;
-        fetchTableData(name);
+        if (name) {
+            fetchTableData(name);
+        }
     } else {
         messageElement.textContent = errMessage;
     }

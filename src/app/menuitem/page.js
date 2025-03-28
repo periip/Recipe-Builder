@@ -33,13 +33,13 @@ export default function MenuItemPage() {
             <p>Choose which columns you want to view in the table.</p>
             <form onSubmit={(e) => projectMenuItemTable(e, selectedAttributes)}>
                 <div>
-                    <input type="checkbox" id="all" name="all" value="all" onClick={handleClick} checked={isAllSelected} />
-                    <label for="all">Select all</label>
+                    <input type="checkbox" id="all" name="all" value="all" onChange={handleClick} checked={isAllSelected} />
+                    <label htmlFor="all">Select all</label>
                 </div>
                 {attributes.map((attr, index) => (
                     <div key={index}>
-                        <input type="checkbox" id={attr} name={attr} value={attr} onClick={handleClick} checked={isAllSelected || selectedAttributes.includes(attr)} />
-                        <label for={attr}>{attr}</label>
+                        <input type="checkbox" id={attr} name={attr} value={attr} onChange={handleClick} checked={isAllSelected || selectedAttributes.includes(attr)} />
+                        <label htmlFor={attr}>{attr}</label>
                     </div>
                 ))}
                 <br/>

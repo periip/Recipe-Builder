@@ -148,9 +148,9 @@ async function initiateTable(name) {
             case 'Ingredient':
                 table = `
                     CREATE TABLE Equipment (
-                        equpiment_name VARCHAR(255),
+                        equipment_name VARCHAR(255),
                         equipment_material VARCHAR(255),
-                        PRIMARY KEY(equpiment_name, equipment_material)
+                        PRIMARY KEY(equipment_name, equipment_material)
                     )
                 `;
                 break;
@@ -218,7 +218,7 @@ async function selectEquipmentTable(condition, nameString, materialString) {
         }
 
         for (let i = 0; i < names.length; i++) {
-            statement += `equpiment_name=:name${i}`; // note the typo in the column name and reset other tables
+            statement += `equipment_name=:name${i}`; // note the typo in the column name and reset other tables
             if (i != names.length - 1) {
                 statement += ' OR ';
             } 

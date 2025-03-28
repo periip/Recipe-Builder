@@ -23,6 +23,10 @@ export async function GET(request) {
         const data = await appService.groupbyCuisineAvgPrice();
         return NextResponse.json({ data });
     }
+    if (action == 'group_by_cuisine_having_min_price_table') {
+        const data = await appService.groupbyCuisineHavingMinPrice();
+        return NextResponse.json({ data });
+    }
     return NextResponse.json({ error: 'Invalid table query' }, { status: 400 });
 }
 

@@ -289,6 +289,21 @@ async function groupbyCuisineAvgPrice() {
     });
 }
 
+async function groupbyCuisineHavingMinPrice() {
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT cuisine, isGourmet, MIN(price)
+                        FROM MenuItem
+                        GROUP BY cuisine, isGourmet
+                        HAVING MIN(price) < 50`;
+        const result = await connection.execute(
+            statement
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 async function insertTable(name, ...attributes) {
     return await withOracleDB(async (connection) => {
         let statement = `INSERT INTO ${name} VALUES (`
@@ -363,5 +378,6 @@ module.exports = {
     selectEquipmentTable,
     projectMenuItemTable,
     groupbyCuisineAvgPrice,
-    joinRecipeIngTable
+    joinRecipeIngTable,
+    groupbyCuisineHavingMinPrice
 };

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import PageLayout from "../components/page-layout";
-import { projectMenuItemTable, groupbyCuisineAvgPrice } from "../api/scripts";
+import { projectMenuItemTable, groupbyCuisineAvgPrice, groupbyGourmetHavingPrice } from "../api/scripts";
 
 const title = "Menu Items";
 const tableName = "MenuItem";
@@ -60,6 +60,20 @@ export default function MenuItemPage() {
                     </tbody>
                 </table>
             <div id="selectResultMsg"></div>
+            <h2>Get the Min Price by Cuisine and Gourmet</h2>
+            <form onSubmit={(e) => groupbyGourmetHavingPrice(e)}>
+                <button type="submit"> Apply </button> <br />
+            </form>
+            <table id="cuisineHavingPrice" border="1">
+                <thead>
+                    <tr>
+                        {["Cuisine", "isGourmet", "Min Price"]?.map((attr, index) => <th key={index}>{attr}</th>)}
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div id="havingResultMsg"></div>
         </PageLayout>
     )
 }

@@ -14,8 +14,9 @@ export default function HasPage() {
             <p>The values are case sensitive and if you enter in the wrong case, the filters will not do anything. If you want to input multiple values, separate them by a comma.</p>
             <form onSubmit={e => JoinRecipeIngTable(e, jointAttributes)}>         
                 Ingredient Name: <input id="ingredient_name" type="text" placeholder="Enter Ingredient" /> <br /><br />
-                <button type="submit"> Find </button> <br />
+                <button type="submit"> Find </button>
             </form>
+            <br />
             <table id="recipeIngTable" border="1">
                     <thead>
                         <tr>

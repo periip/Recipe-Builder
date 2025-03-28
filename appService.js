@@ -148,9 +148,9 @@ async function initiateTable(name) {
             case 'Ingredient':
                 table = `
                     CREATE TABLE Equipment (
-                        equpiment_name VARCHAR(255),
+                        equipment_name VARCHAR(255),
                         equipment_material VARCHAR(255),
-                        PRIMARY KEY(equpiment_name, equipment_material)
+                        PRIMARY KEY(equipment_name, equipment_material)
                     )
                 `;
                 break;
@@ -218,7 +218,7 @@ async function selectEquipmentTable(condition, nameString, materialString) {
         }
 
         for (let i = 0; i < names.length; i++) {
-            statement += `equpiment_name=:name${i}`; // note the typo in the column name and reset other tables
+            statement += `equipment_name=:name${i}`; // note the typo in the column name and reset other tables
             if (i != names.length - 1) {
                 statement += ' OR ';
             } 
@@ -352,6 +352,45 @@ async function deleteIdRecipetable(recipeId) {
     });
 }
 
+async function getAvgYOE() {
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT C1.seniority, AVG(C1.years_of_experience) AS avgyoe, COUNT(*) AS count
+                        FROM Chef C1
+                        GROUP BY C1.seniority
+                        HAVING 1 < (SELECT COUNT(*)
+                            FROM Chef C2
+                            WHERE C1.seniority = C2.seniority)`;
+        const result = await connection.execute(
+            statement
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function getGourmetRecs() {
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT *
+                        FROM Recommends R1
+                        WHERE NOT EXISTS (
+                            (SELECT M.menu_item_name
+                            FROM MenuItem M
+                            WHERE isGourmet = 1)
+                            MINUS
+                            (SELECT R2.menu_item_name
+                            FROM Recommends R2
+                            WHERE R1.chef_name = R2.chef_name)
+                        )`;
+        const result = await connection.execute(
+            statement
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 module.exports = {
     testOracleConnection,
     fetchTableFromDb,
@@ -363,5 +402,7 @@ module.exports = {
     selectEquipmentTable,
     projectMenuItemTable,
     groupbyCuisineAvgPrice,
-    joinRecipeIngTable
+    joinRecipeIngTable,
+    getGourmetRecs,
+    getAvgYOE,
 };

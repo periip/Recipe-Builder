@@ -27,6 +27,14 @@ export async function GET(request) {
         const data = await appService.groupbyCuisineHavingMinPrice();
         return NextResponse.json({ data });
     }
+    if (action == 'get_avg_yoe') {
+        const data = await appService.getAvgYOE();
+        return NextResponse.json({ data });
+    }
+    if (action == 'get_gourmet_recs') {
+        const data = await appService.getGourmetRecs();
+        return NextResponse.json({ data });
+    }
     return NextResponse.json({ error: 'Invalid table query' }, { status: 400 });
 }
 

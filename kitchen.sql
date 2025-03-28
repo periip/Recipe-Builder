@@ -272,7 +272,15 @@ VALUES ('Perry', 1, 'apprentice','Common');
 
 INSERT
 INTO Chef
+VALUES ('Jerry', 7, 'apprentice','Nut');
+
+INSERT
+INTO Chef
 VALUES ('Gordon', 20, 'master', 'Halal');
+
+INSERT
+INTO Chef
+VALUES ('Gordon Sr.', 40, 'master', 'Halal');
 
 INSERT
 INTO Chef
@@ -280,7 +288,11 @@ VALUES ('William', 2, 'novice', 'Gluten');
 
 INSERT
 INTO Chef
-VALUES ('Louis', 0, 'beginner','Diary');
+VALUES ('Louis Jr.', 0, 'beginner','Dairy');
+
+INSERT
+INTO Chef
+VALUES ('Louis Sr.', 1, 'beginner','Dairy');
 
 --RecipeOwns
 --select 'RecipeOwns' AS '';
@@ -361,7 +373,7 @@ VALUES ('Beer', NULL, 6.50, NULL, 'Common', 0);
 
 INSERT
 INTO MenuItem
-VALUES ('Milk Tea', 'Taiwanese', 7.00, 'Contains Milk', 'Diary', 0);
+VALUES ('Milk Tea', 'Taiwanese', 7.00, 'Contains Milk', 'Dairy', 0);
 
 INSERT
 INTO MenuItem
@@ -453,6 +465,14 @@ VALUES ('Ryan', 'BigWay Hot Pot');
 INSERT
 INTO Recommends
 VALUES ('Gordon', 'Beef Wellington');
+
+INSERT
+INTO Recommends
+VALUES ('Gordon', 'Gluten Free Mushroom Pizza');
+
+INSERT
+INTO Recommends
+VALUES ('Gordon', 'Candied Bacon Bourbon');
 
 INSERT
 INTO Recommends

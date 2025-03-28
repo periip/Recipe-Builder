@@ -15,7 +15,7 @@ export default function EquipmentPage() {
             <form onSubmit={e => selectEquipmentTable(e, tableName)}>
                 <div>Please select your preferred filter method (having to match both or only one of the attributes):</div>
                 <div style={{ display: "flex", flexDirection: "row" }}>
-                    <label for="choice1">Both</label>
+                    <label htmlFor="choice1">Both</label>
                     <input
                         type="radio"
                         id="choice1"
@@ -25,7 +25,7 @@ export default function EquipmentPage() {
                         onClick={() => setSelectedFilter('both')}
                     />
 
-                    <label for="choice2">Individually</label>
+                    <label htmlFor="choice2">Individually</label>
                     <input 
                         type="radio" id="choice2" name="contact" value="individual" checked={selectedFilter === 'individual'}
                         onClick={() => setSelectedFilter('individual')} />                   

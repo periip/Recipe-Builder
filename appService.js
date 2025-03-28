@@ -352,6 +352,23 @@ async function deleteIdRecipetable(recipeId) {
     });
 }
 
+async function getAvgYOE() {
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT C1.seniority, AVG(C1.years_of_experience) AS avgyoe, COUNT(*) AS count
+                        FROM Chef C1
+                        GROUP BY C1.seniority
+                        HAVING 1 < (SELECT COUNT(*)
+                            FROM Chef C2
+                            WHERE C1.seniority = C2.seniority)`;
+        const result = await connection.execute(
+            statement
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 async function getGourmetRecs() {
     return await withOracleDB(async (connection) => {
         let statement = `SELECT *
@@ -387,4 +404,5 @@ module.exports = {
     groupbyCuisineAvgPrice,
     joinRecipeIngTable,
     getGourmetRecs,
+    getAvgYOE,
 };

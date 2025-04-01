@@ -23,12 +23,13 @@ export default function EquipmentPage() {
                         value="both"
                         checked={selectedFilter === 'both'}
                         onClick={() => setSelectedFilter('both')}
+                        onChange = {() => "meow"}
                     />
 
                     <label htmlFor="choice2">Individually</label>
                     <input 
                         type="radio" id="choice2" name="contact" value="individual" checked={selectedFilter === 'individual'}
-                        onClick={() => setSelectedFilter('individual')} />                   
+                        onClick={() => setSelectedFilter('individual')} onChange = {() => "meow"}/>                   
                 </div>
                 <br />
 

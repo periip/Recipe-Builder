@@ -45,7 +45,7 @@ export default function MenuItemPage() {
                 <br/>
                 <button type="submit"> Apply </button> <br />
             </form>
-            <div id="updateNameResultMsg"></div>
+            <div id="projectResultMsg"></div>
             <h2>Get the Average Price by the Cuisine Type</h2>
             <form onSubmit={(e) => groupbyCuisineAvgPrice(e, ["cuisine", "avg price"])}>
                 <button type="submit"> Apply </button>
@@ -60,7 +60,7 @@ export default function MenuItemPage() {
                 <tbody>
                 </tbody>
             </table>
-            <div id="selectResultMsg"></div>
+            <div id="avgPriceResultMsg"></div>
             <h2>Get the Min Price by Cuisine and Gourmet</h2>
             <form onSubmit={(e) => groupbyGourmetHavingPrice(e)}>
                 <button type="submit"> Apply </button> <br />

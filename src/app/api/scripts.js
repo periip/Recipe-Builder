@@ -84,6 +84,11 @@ export async function insertCheftable(event, name) {
     const seniorityValue = event.target.elements[2].value
     const licenseValue = event.target.elements[3].value
 
+    if (nameValue.includes(";") || licenseValue.includes(";")){
+        AttackHandler('insertResultMsg', "Potential SQL injection detected. Don't use semi-colons in your input.")
+        return
+    }
+
     const response = await fetch(`/api/controller?action=insert-table&name=${name}`, {
         method: 'POST',
         headers: {
@@ -98,7 +103,6 @@ export async function insertCheftable(event, name) {
     });
 
     const responseData = await response.json();
-    console.log(responseData)
     responseHandler(responseData, 'insertResultMsg', name, "Data inserted successfully!", "Error inserting data!");
 }
 
@@ -112,6 +116,10 @@ export async function selectEquipmentTable(event, name) {
     const nameString = event.target.elements[2].value
     const materialString = event.target.elements[3].value
 
+    if (nameString.includes(";") || materialString.includes(";")){
+        AttackHandler('selectResultMsg', "Potential SQL injection detected. Don't use semi-colons in your input.")
+        return
+    }
 
     const response = await fetch(`/api/controller?action=select-equipment-table`, {
         method: 'POST',
@@ -135,7 +143,7 @@ export async function selectEquipmentTable(event, name) {
             cell.textContent = field;
         });
     });
-    // cant refetch data from the table
+    responseHandler(responseData, 'selectResultMsg', null, "Filtered successfully!", "Error while filtering");
 }
 
 export async function projectMenuItemTable(event, attributes) {
@@ -172,7 +180,7 @@ export async function projectMenuItemTable(event, attributes) {
             cell.textContent = field;
         });
     });
-    // cant refetch data from the table
+    responseHandler(responseData, 'projectResultMsg', null, "Column Projected Successfully!", "Error while projecting");
 }
 
 
@@ -184,6 +192,11 @@ export async function JoinRecipeIngTable(event, attribute) {
     const ingredient = event.target.elements[0].value
     tableBody.innerHTML = '';
     tableHead.innerHTML = '';
+
+    if (ingredient.includes(";")){
+        AttackHandler('selectResultMsg', "Potential SQL injection detected. Don't use semi-colons in your input.")
+        return
+    }
 
     const response = await fetch(`/api/controller?action=join-recipe-ing-table`, {
         method: 'POST',
@@ -212,7 +225,7 @@ export async function JoinRecipeIngTable(event, attribute) {
         });
     });
 
-    responseHandler(responseData, 'selectResultMsg', null, "Found Successfully!", "No Such Ingredient");
+    responseHandler(responseData, 'selectResultMsg', null, "Recipes using selected Ingredients Found!", "No Such Ingredient");
 }
 
 export async function groupbyCuisineAvgPrice(event, attribute) {
@@ -244,7 +257,7 @@ export async function groupbyCuisineAvgPrice(event, attribute) {
         });
     });
 
-    responseHandler(responseData, 'selectResultMsg', null, "Found Successfully!", "No Such Ingredient");
+    responseHandler(responseData, 'avgPriceResultMsg', null, "Found Average Price Successfully!", "Error while Querying");
 }
 
 export async function groupbyGourmetHavingPrice(event) {
@@ -276,7 +289,7 @@ export async function groupbyGourmetHavingPrice(event) {
         });
     });
 
-    responseHandler(responseData, 'havingResultMsg', null, "Found Successfully!", "No Such Ingredient");
+    responseHandler(responseData, 'havingResultMsg', null, "Found Gourmet Price Successfully!", "Error while Querying");
 }
 
 // Counts rows in the demotable.
@@ -300,6 +313,11 @@ export async function updateNameRecipetable(event, name) {
     const oldNameValue = document.getElementById('updateOldName').value;
     const newNameValue = document.getElementById('updateNewName').value;
     const attribute = document.getElementById('updateAttribute').value;
+
+    if (oldNameValue.includes(";") || newNameValue.includes(";")){
+        AttackHandler('updateResultMsg', "Potential SQL injection detected. Don't use semi-colons in your input.")
+        return
+    }
 
     const response = await fetch(`/api/controller?action=update-name-recipetable&name=${name}`, {
         method: 'POST',
@@ -404,7 +422,7 @@ export async function getGourmetRecs(event, attributes) {
 function responseHandler(data, id, name, message, errMessage) {
     const messageElement = document.getElementById(id);
 
-    if (data) {
+    if (data.success) {
         messageElement.textContent = message;
         if (name) {
             fetchTableData(name);
@@ -412,6 +430,11 @@ function responseHandler(data, id, name, message, errMessage) {
     } else {
         messageElement.textContent = errMessage;
     }
+}
+
+function AttackHandler(id, message){
+    const messageElement = document.getElementById(id);
+    messageElement.textContent = message;
 }
  
 // General function to refresh the displayed table data. 

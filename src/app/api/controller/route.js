@@ -21,19 +21,19 @@ export async function GET(request) {
     }
     if (action == 'group_by_cuisine_table') {
         const data = await appService.groupbyCuisineAvgPrice();
-        return NextResponse.json({ data });
+        return NextResponse.json({ success: data.length > 0, data });
     }
     if (action == 'group_by_cuisine_having_min_price_table') {
         const data = await appService.groupbyCuisineHavingMinPrice();
-        return NextResponse.json({ data });
+        return NextResponse.json({ success: data.length > 0, data });
     }
     if (action == 'get_avg_yoe') {
         const data = await appService.getAvgYOE();
-        return NextResponse.json({ data });
+        return NextResponse.json({ success: data.length > 0, data });
     }
     if (action == 'get_gourmet_recs') {
         const data = await appService.getGourmetRecs();
-        return NextResponse.json({ data });
+        return NextResponse.json({ success: data.length > 0, data });
     }
     return NextResponse.json({ error: 'Invalid table query' }, { status: 400 });
 }
@@ -67,17 +67,17 @@ export async function POST(request) {
     if (action === 'select-equipment-table') {
         const { condition, nameString, materialString } = body;
         const data = await appService.selectEquipmentTable(condition, nameString, materialString);
-        return NextResponse.json({ data });
+        return NextResponse.json({ success: data.length > 0, data });
     }
     if (action === 'project-menu-item-table') {
         const { attributes } = body;
         const data = await appService.projectMenuItemTable(...attributes);
-        return NextResponse.json({ data });
+        return NextResponse.json({ success: data.length > 0, data });
     }
     if (action == 'join-recipe-ing-table') {
         const { ingredient } = body;
         const data = await appService.joinRecipeIngTable(ingredient);
-        return NextResponse.json({ data });
+        return NextResponse.json({ success: data.length > 0, data });
     }
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 }

@@ -27,7 +27,7 @@ export default function RecipePage() {
             <h2>Delete {title} in { title } Table</h2>
             <p>The values are case sensitive and if you enter in the wrong case, the delete statement will not do anything.</p>
             <form id="DeleteIDRecipetable" onSubmit={(e) => deleteIDRecipetable(e, tableName)}>
-                recipe ID: <input type="text" id="deleteOldId" placeholder="Enter recipe ID" required/> <br/><br/>
+                recipe ID: <input type="number" id="deleteOldId" placeholder="Enter recipe ID" required/> <br/><br/>
                 <button type="submit"> Delete </button> <br/>
             </form>
             <div id="deleteIdResultMsg"></div>

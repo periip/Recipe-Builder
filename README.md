@@ -1,5 +1,3 @@
-# Meow Meow #
-
 # Project Description #
 
 ## What is the domain of the application?

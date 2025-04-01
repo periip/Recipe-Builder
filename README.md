@@ -1,4 +1,4 @@
-# Project Description #
+# CPSC304 Kitchen Database #
 
 ## What is the domain of the application?
 

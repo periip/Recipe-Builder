@@ -19,6 +19,10 @@ export async function GET(request) {
         const isConnect = await appService.testOracleConnection();
         return NextResponse.json({ message: isConnect ? "connected" : "unable to connect" });
     }
+    if (action === 'get-name-recipetable') {
+        const data = await appService.getNameRecipetable(name);
+        return NextResponse.json({ success: data.length > 0, data });
+    }
     if (action == 'group_by_cuisine_table') {
         const data = await appService.groupbyCuisineAvgPrice();
         return NextResponse.json({ success: data.length > 0, data });
@@ -52,6 +56,12 @@ export async function POST(request) {
     if (action === 'insert-table') {
         const { chef_name, years_of_experience, seniority, cooking_license } = body;
         const success = await appService.insertTable(name, chef_name, years_of_experience, seniority, cooking_license);
+        return NextResponse.json({ success });
+    }
+
+    if (action === 'insert-table-recipe') {
+        const { recipeId, chefName, recipeName } = body;
+        const success = await appService.insertRecipeTable(name, recipeId, chefName, recipeName);
         return NextResponse.json({ success });
     }
     if (action === 'update-name-recipetable') {

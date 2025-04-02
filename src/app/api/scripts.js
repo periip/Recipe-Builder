@@ -106,6 +106,49 @@ export async function insertCheftable(event, name) {
     responseHandler(responseData, 'insertResultMsg', name, "Data inserted successfully!", "Error inserting data!");
 }
 
+// Inserts new records into the demotable.
+export async function insertRecipetable(event, name) {
+    event.preventDefault();
+
+    const recipe_id = event.target.elements[0].value
+    const chef_name = event.target.elements[1].value
+    const recipe_name = event.target.elements[2].value
+
+    if (recipe_name.includes(";") || chef_name.includes(";")){
+        AttackHandler('insertResultMsg', "Potential SQL injection detected. Don't use semi-colons in your input.")
+        return
+    }
+
+    const currentRecipeIDs = await getNameRecipetable("recipe_ID");
+    const currentChefNames = await getNameRecipetable("chef_name");
+    const recipeIdExists = currentRecipeIDs.data?.some(innerList => innerList.includes(recipe_id)) || false;
+    const chefNameExists = currentChefNames.data?.some(innerList => innerList.includes(chef_name)) || false;
+    if (recipeIdExists) {
+        AttackHandler('insertResultMsg', "Recipe ID not unique.")
+        return
+    }
+
+    if (!chefNameExists){
+        AttackHandler('insertResultMsg', "Chef doesn't exist. Can't assign a recipe to no one.")
+        return
+    }
+
+    const response = await fetch(`/api/controller?action=insert-table-recipe`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            recipeId: recipe_id,
+            chefName: chef_name,
+            recipeName: recipe_name
+        })
+    });
+
+    const responseData = await response.json();
+    responseHandler(responseData, 'insertResultMsg', name, "Data inserted successfully!", "Error inserting data! Parent Key or Unique Constraints potentially violated");
+}
+
 export async function selectEquipmentTable(event, name) {
     event.preventDefault();
     const tableElement = document.getElementById('Cheftable');
@@ -304,6 +347,16 @@ export async function countTable(name) {
     const message = `The number of tuples in demotable: ${tupleCount}`;
     console.log(message);
     responseHandler(responseData, 'countResultMsg', name, message, "Error counting tuples!");
+}
+
+// Gets names in the recipe table.
+export async function getNameRecipetable(name) {
+    const response = await fetch(`/api/controller?action=get-name-recipetable&name=${name}`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    return responseData;
 }
 
 // Updates names in the recipe table.

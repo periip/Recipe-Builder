@@ -1,6 +1,6 @@
 'use client';
 import PageLayout from "../components/page-layout";
-import { deleteIDRecipetable, getNameRecipetable, updateNameRecipetable } from "../api/scripts";
+import { deleteIDRecipetable, getNameRecipetable, updateNameRecipetable, insertRecipetable } from "../api/scripts";
 import { useEffect, useState } from 'react';
 
 const attributes = ["Recipe ID", "Chef Name", "Recipe Name"];
@@ -26,6 +26,15 @@ export default function RecipePage() {
    
     return (
         <PageLayout title={title} tableName={tableName} attributes={attributes}>
+            <h2>Insert Values into { title } Table</h2>
+            <form onSubmit={e => insertRecipetable(e, tableName)}>
+                Recipe ID: <input type="number" id="insertRecipeID" placeholder="Enter Recipe ID" required /> <br /><br />
+                Chef Name: <input type="text" id="insertChefName" placeholder="Enter Chef Name" maxLength="20" required/> <br /><br />
+                Recipe Name: <input type="text" id="insertRecipeName" placeholder="Enter Recipe Name" required /> <br /><br />
+                <button type="submit"> insert </button> <br />
+            </form>
+            <div id="insertResultMsg"></div>
+            <br /><hr /><br />
             <h2>Update Name in RecipeTable</h2>
             <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
             <form id="updataNameRecipetable" onSubmit={(e) => updateNameRecipetable(e, tableName)}>
@@ -35,12 +44,12 @@ export default function RecipePage() {
                     <option value="recipe_name">Recipe Name</option>
                 </select> <br /><br />
                 Original Name:
-                <select id="updateOldName" required> {
-                    names &&
-                    names.map((name) => 
-                        <option value={name} key={"update_" + name}>{name}</option>
-                    )
-                } </select> <br /><br />
+                <select id="updateOldName" required defaultValue="">
+                    <option value="" disabled>N/A</option>
+                    {names && names.map((name, index) => (
+                        <option value={name} key={`update_${name}_${index}`}>{name}</option>
+                    ))}
+                </select>
                 New Name:
                 <input
                     type="text"

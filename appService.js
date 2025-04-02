@@ -221,6 +221,21 @@ async function insertTable(name, ...attributes) {
     });
 }
 
+async function insertRecipeTable(name, recipeId, chefName, recipeName) {
+    return await withOracleDB(async (connection) => {
+        let statement = `INSERT INTO RecipeOwns VALUES (:recipeId, :chefName, :recipeName)`
+        const result = await connection.execute(
+            statement,
+            [recipeId, chefName, recipeName],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
 async function getNameRecipetable(name) {
     console.log(name);
     return await withOracleDB(async (connection) => {
@@ -438,4 +453,5 @@ module.exports = {
     groupbyCuisineHavingMinPrice,
     getGourmetRecs,
     getAvgYOE,
+    insertRecipeTable
 };

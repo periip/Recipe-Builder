@@ -58,6 +58,12 @@ export async function POST(request) {
         const success = await appService.insertTable(name, chef_name, years_of_experience, seniority, cooking_license);
         return NextResponse.json({ success });
     }
+
+    if (action === 'insert-table-recipe') {
+        const { recipeId, chefName, recipeName } = body;
+        const success = await appService.insertRecipeTable(name, recipeId, chefName, recipeName);
+        return NextResponse.json({ success });
+    }
     if (action === 'update-name-recipetable') {
         const { oldName, newName , attribute} = body;
         const success = await appService.updateNameRecipetable(oldName, newName, attribute);

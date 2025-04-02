@@ -19,6 +19,10 @@ export async function GET(request) {
         const isConnect = await appService.testOracleConnection();
         return NextResponse.json({ message: isConnect ? "connected" : "unable to connect" });
     }
+    if (action === 'get-name-recipetable') {
+        const data = await appService.getNameRecipetable(name);
+        return NextResponse.json({ success: data.length > 0, data });
+    }
     if (action == 'group_by_cuisine_table') {
         const data = await appService.groupbyCuisineAvgPrice();
         return NextResponse.json({ success: data.length > 0, data });

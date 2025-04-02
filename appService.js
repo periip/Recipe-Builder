@@ -221,6 +221,20 @@ async function insertTable(name, ...attributes) {
     });
 }
 
+async function getNameRecipetable(name) {
+    console.log(name);
+    return await withOracleDB(async (connection) => {
+        let statement = `SELECT ${name} FROM RecipeOwns`;
+        console.log(statement);
+        const result = await connection.execute(
+            statement,
+        );
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
 async function updateNameRecipetable(oldName, newName, attribute) {
     console.log(oldName, newName, attribute)
     return await withOracleDB(async (connection) => {
@@ -414,6 +428,7 @@ module.exports = {
     initiateTable,
     insertTable,
     countTable,
+    getNameRecipetable,
     updateNameRecipetable,
     deleteIdRecipetable,
     selectEquipmentTable,

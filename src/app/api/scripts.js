@@ -306,6 +306,16 @@ export async function countTable(name) {
     responseHandler(responseData, 'countResultMsg', name, message, "Error counting tuples!");
 }
 
+// Gets names in the recipe table.
+export async function getNameRecipetable(name) {
+    const response = await fetch(`/api/controller?action=get-name-recipetable&name=${name}`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    return responseData;
+}
+
 // Updates names in the recipe table.
 export async function updateNameRecipetable(event, name) {
     event.preventDefault();

@@ -2,7 +2,7 @@ import PageLayout from "../components/page-layout";
 
 const title = "Menu Item Addons";
 const tableName = "AddOn";
-const attributes = ["addon_name", "menu_item_name" , "price"];
+const attributes = ["Addon Name", "Menu Item Name" , "Price"];
 export default function HasPage() {
 
     return (

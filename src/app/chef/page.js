@@ -3,7 +3,7 @@ import { getAvgYOE, insertCheftable } from "../api/scripts";
 import DataTable from "../components/data-table";
 import PageLayout from "../components/page-layout";
 
-const attributes = ["Name", "Years of Experience", "Seniority", "Cooking_license"];
+const attributes = ["Name", "Years of Experience", "Seniority", "Cooking License"];
 const yoeAttributes = ["Seniority", "Average Years of Experience", "Count"];
 const title = "Chef";
 const tableName = "Chef";

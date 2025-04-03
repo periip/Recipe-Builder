@@ -2,7 +2,7 @@ import PageLayout from "../components/page-layout";
 
 const title = "Combos";
 const tableName = "Combo";
-const attributes = ["combo_name", "price"];
+const attributes = ["Combo Name", "Price"];
 export default function HasPage() {
 
     return (

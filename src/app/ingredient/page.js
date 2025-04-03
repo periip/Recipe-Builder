@@ -3,7 +3,7 @@ import PageLayout from "../components/page-layout";
 
 const title = "Ingredients";
 const tableName = "Ingredient";
-const attributes = ["ingredient_name", "price"];
+const attributes = ["Ingredient Name", "Price"];
 export default function HasPage() {
 
     return (

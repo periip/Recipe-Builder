@@ -6,7 +6,7 @@ import DataTable from "../components/data-table";
 
 const title = "Menu Items";
 const tableName = "MenuItem";
-const attributes = ["menu_item_name", "cuisine", "price", "dietary_restrictions", "license_requirement", "isGourmet"];
+const attributes = ["Menu Item Name", "Cuisine", "Price", "Dietary Restrictions", "License Requirement", "Gourmet"];
 export default function MenuItemPage() {
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [selectedAttributes, setSelectedAttributes] = useState([]);

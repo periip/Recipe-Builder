@@ -2,7 +2,7 @@ import PageLayout from "../components/page-layout";
 
 const title = "Supplier";
 const tableName = "Supplier";
-const attributes = ["supplier_name"];
+const attributes = ["Supplier Name"];
 export default function SupplierPage() {
 
     return (

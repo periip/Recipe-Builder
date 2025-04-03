@@ -59,7 +59,7 @@ export default function MenuItemPage() {
                 <button type="submit"> Apply </button> <br />
             </form>
             <br />
-            <DataTable attributes={["Cuisine", "isGourmet", "Min Price"]} id="cuisineHavingPrice" />
+            <DataTable attributes={["Cuisine", "Gourmet", "Min Price"]} id="cuisineHavingPrice" />
             <div id="havingResultMsg"></div>
         </PageLayout>
     )

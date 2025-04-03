@@ -144,11 +144,15 @@ textarea::placeholder {
 
 /* The navigation menu links */
 .sidebar a {
-    padding: 5px 8px 6px 15%;
+    padding: 7px 8px 7px 15%;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 20px;
     color: rgb(43, 34, 12);
     display: block;
+}
+
+.sidebar a:last-of-type {
+    margin-bottom: 30px;
 }
 
 /* When you mouse over the navigation links, change their color */

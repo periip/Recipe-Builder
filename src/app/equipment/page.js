@@ -11,25 +11,14 @@ export default function EquipmentPage() {
     return (
         <PageLayout title={title} tableName={tableName} attributes={attributes} >
             <h2>Select Values from {title} Table</h2>
-            <p>The values are case sensitive and if you enter in the wrong case, the filters will not do anything. If you want to input multiple values, separate them by a comma.</p>
+            <p>Input text to retrieve matching values. The values are case sensitive and if you enter in the wrong case, the filters will not do anything. If you want to input multiple values, separate them by a comma.</p>
             <form onSubmit={e => selectEquipmentTable(e, tableName)}>
                 <div>Please select your preferred filter method (having to match both or only one of the attributes):</div>
                 <div style={{ display: "flex", flexDirection: "row" }}>
-                    <label htmlFor="choice1">Both</label>
-                    <input
-                        type="radio"
-                        id="choice1"
-                        name="both"
-                        value="both"
-                        checked={selectedFilter === 'both'}
-                        onClick={() => setSelectedFilter('both')}
-                        onChange = {() => "meow"}
-                    />
-
-                    <label htmlFor="choice2">Individually</label>
-                    <input 
-                        type="radio" id="choice2" name="contact" value="individual" checked={selectedFilter === 'individual'}
-                        onClick={() => setSelectedFilter('individual')} onChange = {() => "meow"}/>                   
+                    <select onChange={e => setSelectedFilter(e.target.value)}>
+                        <option value="both">Both</option>
+                        <option value="individual">Individually</option>
+                    </select>    
                 </div>
                 <br />
 

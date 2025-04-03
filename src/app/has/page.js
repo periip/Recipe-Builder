@@ -1,6 +1,7 @@
 'use client';
 import PageLayout from "../components/page-layout";
 import { JoinRecipeIngTable } from "../api/scripts";
+import DataTable from "../components/data-table";
 
 const title = "Recipe Has Ingredient";
 const tableName = "Has";
@@ -17,15 +18,7 @@ export default function HasPage() {
                 <button type="submit"> Find </button>
             </form>
             <br />
-            <table id="recipeIngTable" border="1">
-                    <thead>
-                        <tr>
-                            {jointAttributes?.map((attr, index) => <th key={index}>{attr}</th>)}
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+            <DataTable attributes={jointAttributes} id="recipeIngTable" />
             <div id="selectResultMsg"></div>
         </PageLayout>
     )

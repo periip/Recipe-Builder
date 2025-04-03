@@ -1,6 +1,7 @@
 'use client';
 import PageLayout from "../components/page-layout";
 import { getGourmetRecs } from "../api/scripts";
+import DataTable from "../components/data-table";
 
 const title = "Chef's Recommended";
 const tableName = "Recommends";
@@ -14,15 +15,7 @@ export default function HasPage() {
                 <button type="submit"> Apply </button>
             </form>
             <br />
-            <table id="gourmetRecs" border="1">
-                <thead>
-                    <tr>
-                        {attributes?.map((attr, index) => <th key={index}>{attr}</th>)}
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <DataTable attributes={attributes} id="gourmetRecs" />
             <div id="selectResultMsg"></div>
         </PageLayout>
     )

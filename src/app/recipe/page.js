@@ -42,7 +42,7 @@ export default function RecipePage() {
                 <select id="updateAttribute" onChange={e => setUpdateNameType(e.target.value)}>
                     <option value="chef_name">Chef Name</option>
                     <option value="recipe_name">Recipe Name</option>
-                </select> <br /><br />
+                </select> <br />
                 Original Name:
                 <select id="updateOldName" required defaultValue="">
                     <option value="" disabled>N/A</option>

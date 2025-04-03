@@ -77,7 +77,7 @@ export async function POST(request) {
     if (action === 'select-equipment-table') {
         const { condition, nameString, materialString } = body;
         const data = await appService.selectEquipmentTable(condition, nameString, materialString);
-        return NextResponse.json({ success: data.length > 0, data });
+        return NextResponse.json({ success: data, data });
     }
     if (action === 'project-menu-item-table') {
         const { attributes } = body;
@@ -88,6 +88,11 @@ export async function POST(request) {
         const { ingredient } = body;
         const data = await appService.joinRecipeIngTable(ingredient);
         return NextResponse.json({ success: data.length > 0, data });
+    }
+    if (action == 'fetch-column-data-type') {
+        const { columnName } = body;
+        const data = await appService.fetchColumnDataType(name, columnName);
+        return NextResponse.json({ success: data, data });
     }
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 }

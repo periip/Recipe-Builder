@@ -1,5 +1,6 @@
 'use client';
 import { getAvgYOE, insertCheftable } from "../api/scripts";
+import DataTable from "../components/data-table";
 import PageLayout from "../components/page-layout";
 
 const attributes = ["Name", "Years of Experience", "Seniority", "Cooking_license"];
@@ -32,15 +33,7 @@ export default function ChefPage() {
                 <button type="submit"> Apply </button>
             </form>
             <br />
-            <table id="avgYOE" border="1">
-                <thead>
-                    <tr>
-                        {yoeAttributes?.map((attr, index) => <th key={index}>{attr}</th>)}
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <DataTable attributes={yoeAttributes} id="avgYOE" />
             <div id="selectResultMsg"></div>
         </PageLayout>
     )

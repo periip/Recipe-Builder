@@ -436,6 +436,27 @@ async function countTable(name) {
     });
 }
 
+async function fetchColumnDataType(tableName, columnName) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT DATA_TYPE 
+             FROM ALL_TAB_COLUMNS 
+             WHERE TABLE_NAME = :tableName AND COLUMN_NAME = :columnName`,
+            [tableName, columnName],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+
+        // Display results
+        console.log("Column Metadata:");
+        result.rows.forEach(row => {
+            console.log(`Type: ${row.DATA_TYPE}`);
+        });
+        return result.rows
+    }).catch(() => {
+        return [];
+    })
+}
+
 
 module.exports = {
     testOracleConnection,
@@ -453,5 +474,6 @@ module.exports = {
     groupbyCuisineHavingMinPrice,
     getGourmetRecs,
     getAvgYOE,
-    insertRecipeTable
+    insertRecipeTable,
+    fetchColumnDataType
 };

@@ -155,9 +155,9 @@ export async function selectEquipmentTable(event, name) {
     const tableBody = tableElement.querySelector('tbody');
     tableBody.innerHTML = '';
 
-    const condition = event.target.elements[0].checked ? "both" : "individual";
-    const nameString = event.target.elements[2].value
-    const materialString = event.target.elements[3].value
+    const condition = event.target.elements[0].value;
+    const nameString = event.target.elements[1].value
+    const materialString = event.target.elements[2].value
 
     if (nameString.includes(";") || materialString.includes(";")){
         AttackHandler('selectResultMsg', "Potential SQL injection detected. Don't use semi-colons in your input.")
@@ -494,4 +494,20 @@ function AttackHandler(id, message){
 // You can invoke this after any table-modifying operation to keep consistency.
 export function fetchTableData(name) {
     fetchAndDisplayUsers(name);
+}
+
+export async function fetchColumnDataType(column, tableName) {
+    const response = fetch(`/api/controller?action=fetch-column-data-type&name=${tableName}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            columnName: column
+        })
+    });
+
+    const responseData = await response.json();
+    console.log(responseData)
+    return responseData.data;
 }

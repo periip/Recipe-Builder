@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import PageLayout from "../components/page-layout";
 import { projectMenuItemTable, groupbyCuisineAvgPrice, groupbyGourmetHavingPrice } from "../api/scripts";
+import DataTable from "../components/data-table";
 
 const title = "Menu Items";
 const tableName = "MenuItem";
@@ -51,29 +52,14 @@ export default function MenuItemPage() {
                 <button type="submit"> Apply </button>
             </form>
             <br />
-            <table id="cuisineAvgPrice" border="1">
-                <thead>
-                    <tr>
-                        {["cuisine", "avg price"]?.map((attr, index) => <th key={index}>{attr}</th>)}
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <DataTable attributes={["Cuisine", "Avg Price"]} id="cuisineAvgPrice" />
             <div id="avgPriceResultMsg"></div>
             <h2>Get the Min Price by Cuisine and Gourmet</h2>
             <form onSubmit={(e) => groupbyGourmetHavingPrice(e)}>
                 <button type="submit"> Apply </button> <br />
             </form>
-            <table id="cuisineHavingPrice" border="1">
-                <thead>
-                    <tr>
-                        {["Cuisine", "isGourmet", "Min Price"]?.map((attr, index) => <th key={index}>{attr}</th>)}
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <br />
+            <DataTable attributes={["Cuisine", "isGourmet", "Min Price"]} id="cuisineHavingPrice" />
             <div id="havingResultMsg"></div>
         </PageLayout>
     )

@@ -9,7 +9,7 @@ export default function DataTable({ attributes, id }) {
             if (tableBody) {
                 const rows = tableBody.querySelectorAll('tr');
                 
-                const colCount = rows[0].querySelectorAll('td').length
+                const colCount = rows[0]?.querySelectorAll('td').length
                 let hasNonBoolean = new Array(colCount).fill(false);
                 for (let i = 0; i < colCount; i++) {;
                     for (let j = 0; j < rows.length; j++) {

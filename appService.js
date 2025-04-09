@@ -316,6 +316,9 @@ async function selectEquipmentTable(condition, nameString, materialString) {
 
         for (let i = 0; i < materials.length; i++) {
             statement += `equipment_material=:material${i}`;
+            if (i != materials.length - 1) {
+                statement += ' OR ';
+            } 
         }
         console.log(statement);
         const result = await connection.execute(
@@ -332,6 +335,7 @@ async function selectEquipmentTable(condition, nameString, materialString) {
 async function projectMenuItemTable(...columns) {
     return await withOracleDB(async (connection) => {
         let statement = `SELECT ${columns.join(',')} FROM MenuItem`;
+        console.log(statement);
         const result = await connection.execute(statement);
         return result.rows;
     }).catch(() => {

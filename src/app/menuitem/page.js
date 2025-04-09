@@ -7,6 +7,7 @@ import DataTable from "../components/data-table";
 const title = "Menu Items";
 const tableName = "MenuItem";
 const attributes = ["Menu Item Name", "Cuisine", "Price", "Dietary Restrictions", "License Requirement", "Gourmet"];
+const values = ["menu_item_name", "cuisine", "price", "dietary_restrictions", "license_requirement", "isGourmet"];
 export default function MenuItemPage() {
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [selectedAttributes, setSelectedAttributes] = useState([]);
@@ -39,7 +40,7 @@ export default function MenuItemPage() {
                 </div>
                 {attributes.map((attr, index) => (
                     <div key={index}>
-                        <input type="checkbox" id={attr} name={attr} value={attr} onChange={handleClick} checked={isAllSelected || selectedAttributes.includes(attr)} />
+                        <input type="checkbox" id={attr} name={attr} value={values[index]} onChange={handleClick} checked={isAllSelected || selectedAttributes.includes(attr)} />
                         <label htmlFor={attr}>{attr}</label>
                     </div>
                 ))}

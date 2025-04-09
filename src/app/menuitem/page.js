@@ -15,7 +15,7 @@ export default function MenuItemPage() {
     const handleClick = (e) => {
         if (e.target.value === "all") {
             setIsAllSelected(e.target.checked);
-            setSelectedAttributes(e.target.checked ? attributes : []);
+            setSelectedAttributes(e.target.checked ? values : []);
         } else {
             if (e.target.checked) {
                 setSelectedAttributes([...selectedAttributes, e.target.value]);
@@ -40,7 +40,7 @@ export default function MenuItemPage() {
                 </div>
                 {attributes.map((attr, index) => (
                     <div key={index}>
-                        <input type="checkbox" id={attr} name={attr} value={values[index]} onChange={handleClick} checked={isAllSelected || selectedAttributes.includes(attr)} />
+                        <input type="checkbox" id={attr} name={attr} value={values[index]} onChange={handleClick} checked={isAllSelected || selectedAttributes.includes(values[index])} />
                         <label htmlFor={attr}>{attr}</label>
                     </div>
                 ))}
